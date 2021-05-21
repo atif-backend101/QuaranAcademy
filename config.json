@@ -1,0 +1,13 @@
+{
+    "connectionString": "mongodb://localhost/QuranAcademy",
+    "secret": "THIS IS TO MAKE SIGNUP/LOGIN/FORGET-PASSWORD/RESET-PASSWORD API", 
+    "emailFrom": "info@node-mongo-signup-verification-api.com",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "auth": {
+            "user": "olga.feest45@ethereal.email",
+            "pass": "eUDaYGDMc9vJwqvVVS"
+        }
+    }
+}
