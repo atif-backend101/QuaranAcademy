@@ -6,18 +6,63 @@ const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
 const userService = require('./user.service')
 
+const passport = require('passport');
+const cookieSession = require('cookie-session')
+require('./passport-setup');
+
+// const passport = require ("passport");
+const strategy = require ("passport-facebook");
+
+
+const FacebookStrategy = strategy.Strategy;
+
+
+
+
+router.use(passport.initialize());
+router.use(passport.session());
+
 // routes
+router.get('/', (req, res) => res.send('Example Home page!'))
+router.get('/failed', (req, res) => res.send('You Failed to log in!'))
+router.get('/logout', (req, res) => {
+    req.session = null;
+    req.logout();
+    console.log("cccccccccc")
+    res.redirect('/user');
+})
+// In this route you can see that if the user is logged in u can acess his info in: req.user
+router.get('/good', isLoggedIn, (req, res) =>{ res.send(`Welcome mr ${req.user.displayName} ${req.user.id}!`);
+var x;
+for (x in req.user.name.familyName) {
+    // text += req.user[x] + " ";
+    console.log(x);
+  }
+// console.log(text);
+})
+
+
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
+// router.post('/facebook',  facebook);
+router.get
+('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// router.post('/google', (req, res) => res.send('user/google ====> working'))
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: 'user/failed' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/user/good');
+  }
+);
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
-router.post('/', authorize(Role.Admin), createSchema, create);
+// router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/block/:id', _delete);
 
@@ -243,4 +288,51 @@ function setTokenCookie(res, token) {
         expires: new Date(Date.now() + 7*24*60*60*1000)
     };
     res.cookie('refreshToken', token, cookieOptions);
+}
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+  });
+
+
+
+
+
+function facebookSchema(req, res, next) {
+    const schema = Joi.object({
+        role: Joi.array().required(),
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
+        mobile: Joi.string().required(),
+        email: Joi.string().email().required(),
+        gender: Joi.string().required(),
+        dob: Joi.string().required(),
+        password: Joi.string().min(6).required(),
+        social_provider : Joi.string(),
+        provider_token : Joi.string(),
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        acceptTerms: Joi.boolean().valid(true).required()
+    });
+    validateRequest(req, next, schema);
+}
+
+function isLoggedIn(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+    // userService.fb(req.body, req.get('origin'))
+    //     .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
+    //     .catch(next);
+}
+
+
+function something(req, res, next) {
+   console.log("something")
 }

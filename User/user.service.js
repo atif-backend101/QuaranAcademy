@@ -6,6 +6,11 @@ const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
 const { error } = require('console');
 
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+// const passport = require ("passport");
+// const strategy = require ("passport-facebook");
 
 // Social provider karna hai.....
 
@@ -345,4 +350,43 @@ async function sendPasswordResetEmail(account, origin) {
         html: `<h4>Reset Password Email</h4>
                ${message}`
     });
+}
+
+
+
+async function isLoggedIn(params, origin) {
+
+
+    // validate
+    // if (await db.Account.findOne({ email: params.email })) {
+    //     // send already registered error in email to prevent account enumeration
+    //     // return await sendAlreadyRegisteredEmail(params.email, origin);
+    //     throw "Email is already in use";
+    // }
+
+    // else if (await db.Account.findOne({ mobile: params.mobile })) {
+    //     // send already registered error in email to prevent account enumeration
+    //     // return await sendAlreadyRegisteredEmail(params.email, origin);
+    //     throw "Phone Number is already in use";
+    // }
+
+    // // create account object
+    // const account = new db.Account(params);
+    // account.otp = randomOtpString(6);
+
+    // // first registered account is an admin
+    // // const isFirstAccount = (await db.Account.countDocuments({})) === 0;
+
+    // // account.role = params.role
+    // // account.verificationToken = randomTokenString();
+    // // account.status = params.status;
+    // // account.social_provider = params.social_provider
+    // // account.provider_token = params.provider_token
+    // // account.mobile = params.mobile
+
+    // // hash password
+    // account.passwordHash = hash(params.password);
+
+    // // save account
+    // await account.save();
 }

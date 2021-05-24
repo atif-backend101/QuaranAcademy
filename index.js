@@ -10,12 +10,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+const cookieSession = require('cookie-session')
+
+app.use(cookieSession({
+    name: 'tuto-session',
+    keys: ['key1', 'key2']
+  }))
+
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
 app.use('/user', require('./User/user.controller'));
 app.use('/permission', require('./Permissions/permission.controller'));
+
 
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));

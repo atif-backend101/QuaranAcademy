@@ -26,8 +26,16 @@ const User = new Schema({
     updated_at: Date,
     deleted_at: Date,
     status: { type: String, default: "Inactive" }, 
-    social_provider : String,
-    provider_token : String,
+    social_provider : [ 
+      {
+        type: String,
+      }
+    ], 
+    provider_token : [ 
+      {
+        type: String,
+      }
+    ],
     verified: Date,
     resetToken: {
         token: String,

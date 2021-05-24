@@ -1,6 +1,9 @@
 {
     "connectionString": "mongodb://localhost/QuranAcademy",
-    "secret": "THIS IS TO MAKE SIGNUP/LOGIN/FORGET-PASSWORD/RESET-PASSWORD API", 
+    "clientID": "CLIENT_ID",
+    "clientSecret": "ACEBOOK_CLIENT_SECRET",
+    "callbackURL": "FACEBOOK_CALLBACK_URL",
+    "secret": "very very hard and mushkil key beacuse bht zada secure krna hai", 
     "emailFrom": "info@node-mongo-signup-verification-api.com",
     "smtpOptions": {
         "host": "smtp.ethereal.email",
