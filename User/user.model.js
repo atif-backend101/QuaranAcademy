@@ -10,15 +10,14 @@ const User = new Schema({
       ],
       role_ids: [ 
         {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "role"
+          type: String
         }
       ],
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, unique: true, required: true },
-    mobile: { type: String, unique: true }, 
-    passwordHash: { type: String, required: true },
+    lastName: { type: String },
+    email: { type: String},
+    mobile: { type: String}, 
+    passwordHash: { type: String },
     gender: String,
     dob: String,
     verificationToken: String,
@@ -31,7 +30,7 @@ const User = new Schema({
         type: String,
       }
     ], 
-    provider_token : [ 
+    provider_id : [ 
       {
         type: String,
       }

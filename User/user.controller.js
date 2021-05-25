@@ -11,12 +11,20 @@ const cookieSession = require('cookie-session')
 require('./passport-setup');
 
 // const passport = require ("passport");
-const strategy = require ("passport-facebook");
+const strategy = require("passport-facebook");
+const {
+    session
+} = require('passport');
 
 
 const FacebookStrategy = strategy.Strategy;
 
 
+
+router.use(cookieSession({
+    name: 'tuto-session',
+    keys: ['key1', 'key2']
+}))
 
 
 router.use(passport.initialize());
@@ -25,36 +33,43 @@ router.use(passport.session());
 // routes
 router.get('/', (req, res) => res.send('Example Home page!'))
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
+
+
 router.get('/logout', (req, res) => {
-    req.session = null;
-    req.logout();
-    console.log("cccccccccc")
-    res.redirect('/user');
+    if (req.isAuthenticated()) {
+        req.logOut()
+        return res.redirect('/user') // Handle valid logout
+    }
+
+    return res.status(401) // Handle unauthenticated response
 })
+
+
+
 // In this route you can see that if the user is logged in u can acess his info in: req.user
-router.get('/good', isLoggedIn, (req, res) =>{ res.send(`Welcome mr ${req.user.displayName} ${req.user.id}!`);
-var x;
-for (x in req.user.name.familyName) {
-    // text += req.user[x] + " ";
-    console.log(x);
-  }
-// console.log(text);
-})
+router.get('/good', isLoggedIn, google)
 
-
+router.post('/student-login', student_loginSchema, student_login);
+router.post('/teacher-login', teacher_loginSchema, teacher_login);
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
 // router.post('/facebook',  facebook);
-router.get
-('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}), (req, res) => {
+    console.log("from gmail ==================> ")
+});
 // router.post('/google', (req, res) => res.send('user/google ====> working'))
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: 'user/failed' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/user/good');
-  }
+router.get('/google/callback', passport.authenticate('google', {
+        failureRedirect: 'user/failed'
+    }),
+    function (req, res) {
+        // Successful authentication, redirect home.
+
+        res.redirect('/user/good');
+    }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
@@ -78,10 +93,20 @@ function authenticateSchema(req, res, next) {
 
 function authenticate(req, res, next) {
     console.log("hello controller")
-    const { email, password } = req.body;
+    const {
+        email,
+        password
+    } = req.body;
     const ipAddress = req.ip;
-    userService.authenticate({ email, password, ipAddress })
-        .then(({ refreshToken, ...account }) => {
+    userService.authenticate({
+            email,
+            password,
+            ipAddress
+        })
+        .then(({
+            refreshToken,
+            ...account
+        }) => {
             setTokenCookie(res, refreshToken);
             res.json(account);
         })
@@ -91,8 +116,14 @@ function authenticate(req, res, next) {
 function refreshToken(req, res, next) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-    userService.refreshToken({ token, ipAddress })
-        .then(({ refreshToken, ...account }) => {
+    userService.refreshToken({
+            token,
+            ipAddress
+        })
+        .then(({
+            refreshToken,
+            ...account
+        }) => {
             setTokenCookie(res, refreshToken);
             res.json(account);
         })
@@ -111,21 +142,31 @@ function revokeToken(req, res, next) {
     const token = req.body.token || req.cookies.refreshToken;
     const ipAddress = req.ip;
 
-    if (!token) return res.status(400).json({ message: 'Token is required' });
+    if (!token) return res.status(400).json({
+        message: 'Token is required'
+    });
 
     // users can revoke their own tokens and admins can revoke any tokens
     if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({
+            message: 'Unauthorized'
+        });
     }
 
-    userService.revokeToken({ token, ipAddress })
-        .then(() => res.json({ message: 'Token revoked' }))
+    userService.revokeToken({
+            token,
+            ipAddress
+        })
+        .then(() => res.json({
+            message: 'Token revoked'
+        }))
         .catch(next);
 }
 
 function registerSchema(req, res, next) {
+    console.log("validation se phle")
     const schema = Joi.object({
-        role: Joi.array().required(),
+        role_ids: Joi.array().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         mobile: Joi.string().required(),
@@ -133,18 +174,23 @@ function registerSchema(req, res, next) {
         gender: Joi.string().required(),
         dob: Joi.string().required(),
         password: Joi.string().min(6).required(),
-        social_provider : Joi.string(),
-        provider_token : Joi.string(),
+        social_provider: Joi.string(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
         acceptTerms: Joi.boolean().valid(true).required()
     });
     validateRequest(req, next, schema);
+    console.log("validation se bad")
 }
 
 function register(req, res, next) {
+    console.log("api se phle")
     userService.register(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
+        .then(() => res.json({
+            message: 'Registration successful, please check your email for verification instructions',
+
+        })).then(() => console.log("api k baad"))
         .catch(next);
+
 }
 
 function verifyEmailSchema(req, res, next) {
@@ -157,7 +203,9 @@ function verifyEmailSchema(req, res, next) {
 
 function verifyEmail(req, res, next) {
     userService.verifyEmail(req.body)
-        .then(() => res.json({ message: 'Verification successful, you can now login' }))
+        .then(() => res.json({
+            message: 'Verification successful, you can now login'
+        }))
         .catch(next);
 }
 
@@ -170,7 +218,9 @@ function forgotPasswordSchema(req, res, next) {
 
 function forgotPassword(req, res, next) {
     userService.forgotPassword(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Please check your email for password reset instructions' }))
+        .then(() => res.json({
+            message: 'Please check your email for password reset instructions'
+        }))
         .catch(next);
 }
 
@@ -183,7 +233,9 @@ function validateResetTokenSchema(req, res, next) {
 
 function validateResetToken(req, res, next) {
     userService.validateResetToken(req.body)
-        .then(() => res.json({ message: 'Token is valid' }))
+        .then(() => res.json({
+            message: 'Token is valid'
+        }))
         .catch(next);
 }
 
@@ -198,7 +250,9 @@ function resetPasswordSchema(req, res, next) {
 
 function resetPassword(req, res, next) {
     userService.resetPassword(req.body)
-        .then(() => res.json({ message: 'Password reset successful, you can now login' }))
+        .then(() => res.json({
+            message: 'Password reset successful, you can now login'
+        }))
         .catch(next);
 }
 
@@ -211,7 +265,9 @@ function getAll(req, res, next) {
 function getById(req, res, next) {
     // users can get their own account and admins can get any account
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({
+            message: 'Unauthorized'
+        });
     }
 
     userService.getById(req.params.id)
@@ -260,7 +316,9 @@ function updateSchema(req, res, next) {
 function update(req, res, next) {
     // users can update their own account and admins can update any account
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({
+            message: 'Unauthorized'
+        });
     }
 
     userService.update(req.params.id, req.body)
@@ -275,7 +333,9 @@ function _delete(req, res, next) {
     // }
     console.log("sss")
     userService.delete(req.params.id)
-        .then(() => res.json({ message: 'Account deleted successfully' }))
+        .then(() => res.json({
+            message: 'Account deleted successfully'
+        }))
         .catch(next);
 }
 
@@ -285,19 +345,19 @@ function setTokenCookie(res, token) {
     // create cookie with refresh token that expires in 7 days
     const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now() + 7*24*60*60*1000)
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     };
     res.cookie('refreshToken', token, cookieOptions);
 }
 
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user);
-  });
-  
-  passport.deserializeUser(function(obj, done) {
+});
+
+passport.deserializeUser(function (obj, done) {
     done(null, obj);
-  });
+});
 
 
 
@@ -313,8 +373,8 @@ function facebookSchema(req, res, next) {
         gender: Joi.string().required(),
         dob: Joi.string().required(),
         password: Joi.string().min(6).required(),
-        social_provider : Joi.string(),
-        provider_token : Joi.string(),
+        // social_provider: Joi.string(),
+        // provider_token: Joi.string(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
         acceptTerms: Joi.boolean().valid(true).required()
     });
@@ -324,8 +384,10 @@ function facebookSchema(req, res, next) {
 function isLoggedIn(req, res, next) {
     if (req.user) {
         next();
+        console.log("logged in")
     } else {
         res.sendStatus(401);
+        console.log("logged out")
     }
     // userService.fb(req.body, req.get('origin'))
     //     .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
@@ -334,5 +396,77 @@ function isLoggedIn(req, res, next) {
 
 
 function something(req, res, next) {
-   console.log("something")
+    console.log("something")
+}
+
+
+function google(req, res, next) {
+    userService.google(req.user, req.get('origin'))
+        .then(({
+            ...googleUser
+        }) => {
+            res.json(googleUser);
+        })
+        .catch(next);
+}
+
+
+function student_loginSchema(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required()
+    });
+    validateRequest(req, next, schema);
+}
+
+function student_login(req, res, next) {
+    console.log("hello controller")
+    const {
+        email,
+        password
+    } = req.body;
+    const ipAddress = req.ip;
+    userService.student_login({
+            email,
+            password,
+            ipAddress
+        })
+        .then(({
+            refreshToken,
+            ...account
+        }) => {
+            setTokenCookie(res, refreshToken);
+            res.json(account);
+        })
+        .catch(next);
+}
+
+function teacher_loginSchema(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required()
+    });
+    validateRequest(req, next, schema);
+}
+
+function teacher_login(req, res, next) {
+    console.log("hello controller")
+    const {
+        email,
+        password
+    } = req.body;
+    const ipAddress = req.ip;
+    userService.teacher_login({
+            email,
+            password,
+            ipAddress
+        })
+        .then(({
+            refreshToken,
+            ...account
+        }) => {
+            setTokenCookie(res, refreshToken);
+            res.json(account);
+        })
+        .catch(next);
 }
