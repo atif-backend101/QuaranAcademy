@@ -36,6 +36,7 @@ module.exports = {
     update,
     delete: _delete,
     google,
+    facebook,
     student_login,
     teacher_login
 };
@@ -482,25 +483,56 @@ async function sendPasswordResetEmail(account, origin) {
 async function google(params, origin) {
 
     const googleUser = await db.Account.findOne({
-        provider_id: params.id
+        provider_id: params.id, social_provider: "google"
     });
 
-    if (!googleUser) {
+    // if (!googleUser) {
+    //     console.log("User does not exist")
+    //     const account = new db.Account();
+    //     account.status = "active";
+    //     account.provider_id = params.id;
+    //     account.firstName = params.displayName;
+    //     account.social_provider = params.provider
+    //     await account.save();
+    //     // console.log("==========> ", account)
+    //     return account;
+    // } else if (googleUser) {
+    //     // console.log("==========> found")
+    //     // console.log(googleUser)
+    //     // console.log("already saved....")
+    //     return googleUser;
+    // } else {
+    //     throw "some error"
+    // }
+
+}
+
+
+async function facebook(params, origin) {
+
+    const facebookUser = await db.Account.findOne({
+        provider_id: params.id, social_provider: "facebook"
+    });
+
+    console.log("facebook user ======>",facebookUser)
+
+    if (!facebookUser) {
         console.log("User does not exist")
         const account = new db.Account();
         account.status = "active";
         account.provider_id = params.id;
-        account.firstName = params.displayName;
+        account.firstName = params._json.first_name;
+        account.lastName = params._json.last_name;
         account.social_provider = params.provider
         await account.save();
-        console.log("==========> ", account)
+        // console.log("==========> ", account)
         return account;
-    } else if (googleUser) {
-        console.log("==========> found")
-        console.log(googleUser)
-        console.log("already saved....")
+    } else if (facebookUser) {
+        // console.log("==========> found")
+        // console.log(googleUser)
+        // console.log("already saved....")
 
-        return googleUser;
+        return facebookUser;
     } else {
         throw "some error"
     }

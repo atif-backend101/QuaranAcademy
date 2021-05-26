@@ -1,28 +1,27 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Roles = new Schema({
+const Class = new Schema({
     
     title: { type: String, required: true },
+    time_slot : {type: String},
     days: { type: String, required: true },
     max_students: { type: Number, required: true },
     fee: { type: Number, required: true },
     duration: { type: Number, required: true },
     subscription_period: { type: String, required: true },
-    created_at: { type: Date, default: Date.now },
     classroom_url : { type: String, required: true },
-    updated_at: Date,
-    user: [ 
+    created_at: { type: Date, default: Date.now },
+    updated_at:{type: Date},
+    teacher:  
         {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "user"
+          type: String
         }
-      ]
 });
 
 
 
-Roles.set('toJSON', {
+Class.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) {
@@ -32,4 +31,4 @@ Roles.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('Roles', Role);
+module.exports = mongoose.model('Class', Class);

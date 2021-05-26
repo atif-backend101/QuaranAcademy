@@ -7,6 +7,8 @@ mongoose.Promise = global.Promise;
 module.exports = {
     Account: require('user/user.model'),
     per:require('permissions/permission.model'),
+    role:require('roles/role.model'),
+    class:require('class/class.model'),
     RefreshToken: require('accounts/refresh-token.model'),
     isValidId
 };

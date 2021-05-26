@@ -4,20 +4,20 @@ const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
+
 const userService = require('./user.service')
 
 const passport = require('passport');
 const cookieSession = require('cookie-session')
-require('./passport-setup');
+require('./passport-google-setup');
+require('./passport-fb-setup');
 
 // const passport = require ("passport");
-const strategy = require("passport-facebook");
+
 const {
     session
 } = require('passport');
 
-
-const FacebookStrategy = strategy.Strategy;
 
 
 
@@ -47,7 +47,22 @@ router.get('/logout', (req, res) => {
 
 
 // In this route you can see that if the user is logged in u can acess his info in: req.user
-router.get('/good', isLoggedIn, google)
+router.get('/good', isLoggedIn_google, google)
+router.get('/fb-good', isLoggedIn_facebook,facebook)
+
+router.get("/auth/facebook", passport.authenticate("facebook"));
+router.get(
+    "/auth/facebook/callback",
+    passport.authenticate("facebook", {
+      successRedirect: "/user/fb-good",
+      failureRedirect: "/user/failed"
+    }),function (req, res) {
+        // Successful authentication, redirect home.
+
+        res.redirect('/user/fb-good');
+    }
+);
+
 
 router.post('/student-login', student_loginSchema, student_login);
 router.post('/teacher-login', teacher_loginSchema, teacher_login);
@@ -381,17 +396,34 @@ function facebookSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function isLoggedIn(req, res, next) {
+
+function isLoggedIn_google(req, res, next) {
     if (req.user) {
         next();
-        console.log("logged in")
+        // console.log("success req.user =======> ",req.user)
+        console.log("logged in Google")
     } else {
-        res.sendStatus(401);
-        console.log("logged out")
+        res.status(401).json({message: "please sign in to continue"});
+
+        console.log("logged out Google")
     }
-    // userService.fb(req.body, req.get('origin'))
-    //     .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
-    //     .catch(next);
+}
+
+function isLoggedIn_facebook(req, res, next) {
+    if (req.user) {
+        next();
+        for(var x in req.user){
+            console.log(x)
+    }
+        // console.log("success req.user =======> ",req.user)
+        res.status(200)
+        console.log("logged in Facebook")
+    } else {
+        res.status(401).json({message: "please sign in to continue"});
+        console.log("req.user =======> ",req.user)
+        console.log("logout out facebook")
+    }
+
 }
 
 
@@ -406,6 +438,16 @@ function google(req, res, next) {
             ...googleUser
         }) => {
             res.json(googleUser);
+        })
+        .catch(next);
+}
+
+function facebook(req, res, next) {
+    userService.facebook(req.user, req.get('origin'))
+        .then(({
+            ...facebookUser
+        }) => {
+            res.json(facebookUser);
         })
         .catch(next);
 }

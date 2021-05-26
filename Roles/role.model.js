@@ -26,4 +26,4 @@ Roles.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('Roles', Role);
+module.exports = mongoose.model('Roles', Roles);
