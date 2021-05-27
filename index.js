@@ -24,6 +24,7 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 app.use('/user', require('./User/user.controller'));
 app.use('/permission', require('./Permissions/permission.controller'));
 app.use('/roles', require('./Roles/role.controller'));
+app.use('/class', require('./Class/class.controller'));
 
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));

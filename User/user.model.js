@@ -13,7 +13,7 @@ const User = new Schema({
           type: String
         }
       ],
-    firstName: { type: String, required: true },
+    firstName: { type: String },
     lastName: { type: String },
     email: { type: String},
     mobile: { type: String}, 
