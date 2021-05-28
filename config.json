@@ -6,11 +6,11 @@
     "secret": "very very hard and mushkil key beacuse bht zada secure krna hai", 
     "emailFrom": "info@node-mongo-signup-verification-api.com",
     "smtpOptions": {
-        "host": "smtp.ethereal.email",
+        "host": "smtp.gmail.com",
         "port": 587,
         "auth": {
-            "user": "jamarcus.parker58@ethereal.email",
-            "pass": "huZeDxKHNp77mVSGj2"
+            "user": "",
+            "pass": ""
         }
     }
 }

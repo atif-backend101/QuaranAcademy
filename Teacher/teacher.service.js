@@ -22,7 +22,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 // Social provider karna hai.....
 
 module.exports = {
-    authenticate,
     refreshToken,
     revokeToken,
     register,
@@ -34,10 +33,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete,
     google,
     facebook,
-    student_login,
     teacher_login
 };
 
@@ -46,7 +43,7 @@ async function authenticate({
     password,
     ipAddress
 }) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         email
     });
 
@@ -74,7 +71,7 @@ async function student_login({
     password,
     ipAddress
 }) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         email
     });
 
@@ -102,7 +99,7 @@ async function teacher_login({
     password,
     ipAddress
 }) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         email
     });
 
@@ -182,13 +179,13 @@ function randomOtpString(n) {
 
 async function register(params, origin) {
     // validate
-    if (await db.Account.findOne({
+    if (await db.Teacher.findOne({
             email: params.email
         })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         throw "Email is already in use";
-    } else if (await db.Account.findOne({
+    } else if (await db.Teacher.findOne({
             mobile: params.mobile
         })) {
         // send already registered error in email to prevent account enumeration
@@ -197,11 +194,11 @@ async function register(params, origin) {
     }
 
     // create account object
-    const account = new db.Account(params);
+    const account = new db.Teacher(params);
     account.otp = randomOtpString(6);
 
     // first registered account is an admin
-    // const isFirstAccount = (await db.Account.countDocuments({})) === 0;
+    // const isFirstAccount = (await db.Teacher.countDocuments({})) === 0;
 
     // account.role = params.role
     // account.verificationToken = randomTokenString();
@@ -222,7 +219,7 @@ async function register(params, origin) {
 }
 
 async function verifyEmail(params) {
-    const account = await db.Account.findOne(params);
+    const account = await db.Teacher.findOne(params);
     console.log(account)
     if (!account) throw 'Verification failed';
 
@@ -235,7 +232,7 @@ async function verifyEmail(params) {
 async function forgotPassword({
     email
 }, origin) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         email
     });
 
@@ -256,7 +253,7 @@ async function forgotPassword({
 async function validateResetToken({
     token
 }) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         'resetToken.token': token,
         'resetToken.expires': {
             $gt: Date.now()
@@ -270,7 +267,7 @@ async function resetPassword({
     token,
     password
 }) {
-    const account = await db.Account.findOne({
+    const account = await db.Teacher.findOne({
         'resetToken.token': token,
         'resetToken.expires': {
             $gt: Date.now()
@@ -287,7 +284,7 @@ async function resetPassword({
 }
 
 async function getAll() {
-    const accounts = await db.Account.find();
+    const accounts = await db.Teacher.find();
     return accounts.map(x => basicDetails(x));
 }
 
@@ -298,13 +295,13 @@ async function getById(id) {
 
 async function create(params) {
     // validate
-    if (await db.Account.findOne({
+    if (await db.Teacher.findOne({
             email: params.email
         })) {
         throw 'Email "' + params.email + '" is already registered';
     }
 
-    const account = new db.Account(params);
+    const account = new db.Teacher(params);
     account.verified = Date.now();
 
     // hash password
@@ -320,7 +317,7 @@ async function update(id, params) {
     const account = await getAccount(id);
 
     // validate (if email was changed)
-    if (params.email && account.email !== params.email && await db.Account.findOne({
+    if (params.email && account.email !== params.email && await db.Teacher.findOne({
             email: params.email
         })) {
         throw 'Email "' + params.email + '" is already taken';
@@ -339,23 +336,23 @@ async function update(id, params) {
     return basicDetails(account);
 }
 
-async function _delete(id) {
-    const account = await getAccount(id);
-    if (account.status === "blocked") {
-        throw "User is already blocked."
-    }
+// async function _delete(id) {
+//     const account = await getAccount(id);
+//     if (account.status === "blocked") {
+//         throw "User is already blocked."
+//     }
 
-    // await account.remove();
-    account.deleted_at = Date.now();
-    account.status = "blocked";
-    await account.save();
-}
+//     // await account.remove();
+//     account.deleted_at = Date.now();
+//     account.status = "blocked";
+//     await account.save();
+// }
 
 // helper functions
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Account.findById(id);
+    const account = await db.Teacher.findById(id);
     if (!account) throw 'Account not found';
     return account;
 }
@@ -482,35 +479,35 @@ async function sendPasswordResetEmail(account, origin) {
 
 async function google(params, origin) {
 
-    const googleUser = await db.Account.findOne({
+    const googleUser = await db.Teacher.findOne({
         provider_id: params.id, social_provider: "google"
     });
 
-    // if (!googleUser) {
-    //     console.log("User does not exist")
-    //     const account = new db.Account();
-    //     account.status = "active";
-    //     account.provider_id = params.id;
-    //     account.firstName = params.displayName;
-    //     account.social_provider = params.provider
-    //     await account.save();
-    //     // console.log("==========> ", account)
-    //     return account;
-    // } else if (googleUser) {
-    //     // console.log("==========> found")
-    //     // console.log(googleUser)
-    //     // console.log("already saved....")
-    //     return googleUser;
-    // } else {
-    //     throw "some error"
-    // }
+    if (!googleUser) {
+        console.log("User does not exist")
+        const account = new db.Teacher();
+        account.status = "active";
+        account.provider_id = params.id;
+        account.firstName = params.displayName;
+        account.social_provider = params.provider
+        await account.save();
+        // console.log("==========> ", account)
+        return account;
+    } else if (googleUser) {
+        // console.log("==========> found")
+        // console.log(googleUser)
+        // console.log("already saved....")
+        return googleUser;
+    } else {
+        throw "some error"
+    }
 
 }
 
 
 async function facebook(params, origin) {
 
-    const facebookUser = await db.Account.findOne({
+    const facebookUser = await db.Teacher.findOne({
         provider_id: params.id, social_provider: "facebook"
     });
 
@@ -518,7 +515,7 @@ async function facebook(params, origin) {
 
     if (!facebookUser) {
         console.log("User does not exist")
-        const account = new db.Account();
+        const account = new db.Teacher();
         account.status = "active";
         account.provider_id = params.id;
         account.firstName = params._json.first_name;

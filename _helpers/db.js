@@ -5,7 +5,9 @@ mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionO
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    Account: require('user/user.model'),
+    Admin: require('admin/admin.model'),
+    Student: require('student/student.model'),
+    Teacher: require('teacher/teacher.model'),
     per:require('permissions/permission.model'),
     role:require('roles/role.model'),
     class:require('class/class.model'),

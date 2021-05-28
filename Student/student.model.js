@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const User = new Schema({
+const Student = new Schema({
     class_ids: [ 
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "class"
         }
       ],
-      role_ids: [ 
+      role_ids: 
         {
-          type: String
-        }
-      ],
+          type: String,
+          default: "Student"
+        },
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String},
@@ -46,11 +46,11 @@ const User = new Schema({
 
 });
 
-User.virtual('isVerified').get(function () {
+Student.virtual('isVerified').get(function () {
     return !!(this.verified || this.passwordReset);
 });
 
-User.set('toJSON', {
+Student.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) {
@@ -60,4 +60,4 @@ User.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('Users', User);
+module.exports = mongoose.model('Students', Student);

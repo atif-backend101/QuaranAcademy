@@ -5,7 +5,7 @@ const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
 
-const userService = require('./user.service')
+const teacherService = require('./teacher.service')
 
 const passport = require('passport');
 const cookieSession = require('cookie-session')
@@ -38,7 +38,7 @@ router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 router.get('/logout', (req, res) => {
     if (req.isAuthenticated()) {
         req.logOut()
-        return res.redirect('/user') // Handle valid logout
+        return res.redirect('/teacher') // Handle valid logout
     }
 
     return res.status(401) // Handle unauthenticated response
@@ -54,19 +54,18 @@ router.get("/auth/facebook", passport.authenticate("facebook"));
 router.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
-      successRedirect: "/user/fb-good",
-      failureRedirect: "/user/failed"
+      successRedirect: "/teacher/fb-good",
+      failureRedirect: "/teacher/failed"
     }),function (req, res) {
         // Successful authentication, redirect home.
 
-        res.redirect('/user/fb-good');
+        res.redirect('/teacher/fb-good');
     }
 );
 
 
-router.post('/student-login', student_loginSchema, student_login);
 router.post('/teacher-login', teacher_loginSchema, teacher_login);
-router.post('/authenticate', authenticateSchema, authenticate);
+// router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
@@ -78,12 +77,12 @@ router.get('/google', passport.authenticate('google', {
 });
 // router.post('/google', (req, res) => res.send('user/google ====> working'))
 router.get('/google/callback', passport.authenticate('google', {
-        failureRedirect: 'user/failed'
+        failureRedirect: 'teacher/failed'
     }),
     function (req, res) {
         // Successful authentication, redirect home.
 
-        res.redirect('/user/good');
+        res.redirect('/teacher/good');
     }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
@@ -94,7 +93,7 @@ router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
-router.delete('/block/:id', _delete);
+// router.delete('/block/:id', _delete);
 
 module.exports = router;
 
@@ -113,7 +112,7 @@ function authenticate(req, res, next) {
         password
     } = req.body;
     const ipAddress = req.ip;
-    userService.authenticate({
+    teacherService.authenticate({
             email,
             password,
             ipAddress
@@ -131,7 +130,7 @@ function authenticate(req, res, next) {
 function refreshToken(req, res, next) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-    userService.refreshToken({
+    teacherService.refreshToken({
             token,
             ipAddress
         })
@@ -162,13 +161,13 @@ function revokeToken(req, res, next) {
     });
 
     // users can revoke their own tokens and admins can revoke any tokens
-    if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
-        return res.status(401).json({
-            message: 'Unauthorized'
-        });
-    }
+    // if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
+    //     return res.status(401).json({
+    //         message: 'Unauthorized'
+    //     });
+    // }
 
-    userService.revokeToken({
+    teacherService.revokeToken({
             token,
             ipAddress
         })
@@ -181,7 +180,7 @@ function revokeToken(req, res, next) {
 function registerSchema(req, res, next) {
     console.log("validation se phle")
     const schema = Joi.object({
-        role_ids: Joi.array().required(),
+        role_ids: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         mobile: Joi.string().required(),
@@ -199,7 +198,7 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     console.log("api se phle")
-    userService.register(req.body, req.get('origin'))
+    teacherService.register(req.body, req.get('origin'))
         .then(() => res.json({
             message: 'Registration successful, please check your email for verification instructions',
 
@@ -217,7 +216,7 @@ function verifyEmailSchema(req, res, next) {
 }
 
 function verifyEmail(req, res, next) {
-    userService.verifyEmail(req.body)
+    teacherService.verifyEmail(req.body)
         .then(() => res.json({
             message: 'Verification successful, you can now login'
         }))
@@ -232,7 +231,7 @@ function forgotPasswordSchema(req, res, next) {
 }
 
 function forgotPassword(req, res, next) {
-    userService.forgotPassword(req.body, req.get('origin'))
+    teacherService.forgotPassword(req.body, req.get('origin'))
         .then(() => res.json({
             message: 'Please check your email for password reset instructions'
         }))
@@ -247,7 +246,7 @@ function validateResetTokenSchema(req, res, next) {
 }
 
 function validateResetToken(req, res, next) {
-    userService.validateResetToken(req.body)
+    teacherService.validateResetToken(req.body)
         .then(() => res.json({
             message: 'Token is valid'
         }))
@@ -264,7 +263,7 @@ function resetPasswordSchema(req, res, next) {
 }
 
 function resetPassword(req, res, next) {
-    userService.resetPassword(req.body)
+    teacherService.resetPassword(req.body)
         .then(() => res.json({
             message: 'Password reset successful, you can now login'
         }))
@@ -272,7 +271,7 @@ function resetPassword(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    userService.getAll()
+    teacherService.getAll()
         .then(accounts => res.json(accounts))
         .catch(next);
 }
@@ -285,29 +284,29 @@ function getById(req, res, next) {
         });
     }
 
-    userService.getById(req.params.id)
+    teacherService.getById(req.params.id)
         .then(account => account ? res.json(account) : res.sendStatus(404))
         .catch(next);
 }
 
-function createSchema(req, res, next) {
-    const schema = Joi.object({
-        title: Joi.string().required(),
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-        role: Joi.string().valid(Role.Admin, Role.User).required()
-    });
-    validateRequest(req, next, schema);
-}
+// function createSchema(req, res, next) {
+//     const schema = Joi.object({
+//         title: Joi.string().required(),
+//         firstName: Joi.string().required(),
+//         lastName: Joi.string().required(),
+//         email: Joi.string().email().required(),
+//         password: Joi.string().min(6).required(),
+//         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+//         role: Joi.string().valid(Role.Admin, Role.User).required()
+//     });
+//     validateRequest(req, next, schema);
+// }
 
-function create(req, res, next) {
-    userService.create(req.body)
-        .then(account => res.json(account))
-        .catch(next);
-}
+// function create(req, res, next) {
+//     teacherService.create(req.body)
+//         .then(account => res.json(account))
+//         .catch(next);
+// }
 
 function updateSchema(req, res, next) {
     const schemaRules = {
@@ -320,9 +319,9 @@ function updateSchema(req, res, next) {
     };
 
     // only admins can update role
-    if (req.user.role === Role.Admin) {
-        schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty('');
-    }
+    // if (req.user.role === Role.Admin) {
+    //     schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty('');
+    // }
 
     const schema = Joi.object(schemaRules).with('password', 'confirmPassword');
     validateRequest(req, next, schema);
@@ -330,29 +329,29 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
     // users can update their own account and admins can update any account
-    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-        return res.status(401).json({
-            message: 'Unauthorized'
-        });
-    }
+    // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+    //     return res.status(401).json({
+    //         message: 'Unauthorized'
+    //     });
+    // }
 
-    userService.update(req.params.id, req.body)
+    teacherService.update(req.params.id, req.body)
         .then(account => res.json(account))
         .catch(next);
 }
 
-function _delete(req, res, next) {
-    // users can delete their own account and admins can delete any account
-    // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-    //     return res.status(401).json({ message: 'Unauthorized' });
-    // }
-    console.log("sss")
-    userService.delete(req.params.id)
-        .then(() => res.json({
-            message: 'Account deleted successfully'
-        }))
-        .catch(next);
-}
+// function _delete(req, res, next) {
+//     // users can delete their own account and admins can delete any account
+//     // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+//     //     return res.status(401).json({ message: 'Unauthorized' });
+//     // }
+//     console.log("sss")
+//     teacherService.delete(req.params.id)
+//         .then(() => res.json({
+//             message: 'Account deleted successfully'
+//         }))
+//         .catch(next);
+// }
 
 // helper functions
 
@@ -378,23 +377,23 @@ passport.deserializeUser(function (obj, done) {
 
 
 
-function facebookSchema(req, res, next) {
-    const schema = Joi.object({
-        role: Joi.array().required(),
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        mobile: Joi.string().required(),
-        email: Joi.string().email().required(),
-        gender: Joi.string().required(),
-        dob: Joi.string().required(),
-        password: Joi.string().min(6).required(),
-        // social_provider: Joi.string(),
-        // provider_token: Joi.string(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-        acceptTerms: Joi.boolean().valid(true).required()
-    });
-    validateRequest(req, next, schema);
-}
+// function facebookSchema(req, res, next) {
+//     const schema = Joi.object({
+//         role: Joi.array().required(),
+//         firstName: Joi.string().required(),
+//         lastName: Joi.string().required(),
+//         mobile: Joi.string().required(),
+//         email: Joi.string().email().required(),
+//         gender: Joi.string().required(),
+//         dob: Joi.string().required(),
+//         password: Joi.string().min(6).required(),
+//         // social_provider: Joi.string(),
+//         // provider_token: Joi.string(),
+//         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+//         acceptTerms: Joi.boolean().valid(true).required()
+//     });
+//     validateRequest(req, next, schema);
+// }
 
 
 function isLoggedIn_google(req, res, next) {
@@ -427,13 +426,10 @@ function isLoggedIn_facebook(req, res, next) {
 }
 
 
-function something(req, res, next) {
-    console.log("something")
-}
 
 
 function google(req, res, next) {
-    userService.google(req.user, req.get('origin'))
+    teacherService.google(req.user, req.get('origin'))
         .then(({
             ...googleUser
         }) => {
@@ -443,7 +439,7 @@ function google(req, res, next) {
 }
 
 function facebook(req, res, next) {
-    userService.facebook(req.user, req.get('origin'))
+    teacherService.facebook(req.user, req.get('origin'))
         .then(({
             ...facebookUser
         }) => {
@@ -453,35 +449,7 @@ function facebook(req, res, next) {
 }
 
 
-function student_loginSchema(req, res, next) {
-    const schema = Joi.object({
-        email: Joi.string().required(),
-        password: Joi.string().required()
-    });
-    validateRequest(req, next, schema);
-}
 
-function student_login(req, res, next) {
-    console.log("hello controller")
-    const {
-        email,
-        password
-    } = req.body;
-    const ipAddress = req.ip;
-    userService.student_login({
-            email,
-            password,
-            ipAddress
-        })
-        .then(({
-            refreshToken,
-            ...account
-        }) => {
-            setTokenCookie(res, refreshToken);
-            res.json(account);
-        })
-        .catch(next);
-}
 
 function teacher_loginSchema(req, res, next) {
     const schema = Joi.object({
@@ -498,7 +466,7 @@ function teacher_login(req, res, next) {
         password
     } = req.body;
     const ipAddress = req.ip;
-    userService.teacher_login({
+    teacherService.teacher_login({
             email,
             password,
             ipAddress

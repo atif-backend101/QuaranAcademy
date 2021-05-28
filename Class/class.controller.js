@@ -76,10 +76,4 @@ function addStudentsToClass(req, res, next) {
     .catch(next);
 }
 
-function addStudentsToClass(req, res, next) {
-  classService
-    .addStudentsToClass(req.body)
-    .then((accounts) => res.json(accounts))
-    .catch(next);
-}
 

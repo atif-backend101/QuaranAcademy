@@ -21,7 +21,9 @@ app.use(cookieSession({
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
-app.use('/user', require('./User/user.controller'));
+app.use('/admin', require('./Admin/admin.controller'));
+app.use('/student', require('./Student/student.controller'));
+app.use('/teacher', require('./Teacher/teacher.controller'));
 app.use('/permission', require('./Permissions/permission.controller'));
 app.use('/roles', require('./Roles/role.controller'));
 app.use('/class', require('./Class/class.controller'));
