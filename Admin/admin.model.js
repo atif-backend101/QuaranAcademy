@@ -29,8 +29,7 @@ const Admin = new Schema({
     },
     otp: { type: String, },
     verified: Date,
-    passwordReset: Date,
-
+    passwordReset: Date
 });
 
 Admin.virtual('isVerified').get(function () {

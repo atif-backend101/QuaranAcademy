@@ -41,6 +41,20 @@ async function authenticate({
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
+    } else if (account.super === true) {
+        account.verified = Date.now();
+        await account.save();
+        const jwtToken = generateJwtToken(account);
+        const refreshToken = generateRefreshToken(account, ipAddress);
+        // save refresh token
+        await refreshToken.save();
+        // return basic details and tokens
+        return {
+            // ...basicDetails(account),
+            account,
+            jwtToken,
+            refreshToken: refreshToken.token
+        };
     } else if (account.role_ids.includes("admin") === false) {
         throw 'you are not admin';
     } else { // authentication successful so generate jwt and refresh tokens
@@ -165,7 +179,7 @@ function randomOtpString(n) {
     max = Math.pow(10, n + add);
     var min = max / 10; // Math.pow(10, n) basically
     var number = Math.floor(Math.random() * (max - min + 1)) + min;
-
+    console.log(("" + number).substring(add))
     return ("" + number).substring(add);
 }
 
@@ -221,9 +235,7 @@ async function verifyEmail(params) {
     await account.save();
 }
 
-async function forgotPassword({
-    email
-}, origin) {
+async function forgotPassword({email}, origin) {
     const account = await db.Admin.findOne({
         email
     });
@@ -232,46 +244,39 @@ async function forgotPassword({
     if (!account) return;
 
     // create reset token that expires after 24 hours
-    account.resetToken = {
-        token: randomOtpString(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
-    };
+    account.otp = randomOtpString(6);
+
+
+
     await account.save();
 
     // send email
     await sendPasswordResetEmail(account, origin);
 }
 
-async function validateResetToken({
-    token
-}) {
-    const account = await db.Admin.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
-    });
+async function validateResetToken(params) {
+    const account = await db.Admin.findOne(params);
+    console.log("....")
 
     if (!account) throw 'Invalid token';
 }
 
-async function resetPassword({
-    token,
-    password
-}) {
+async function resetPassword(params) {
     const account = await db.Admin.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
+        // 'email': params.email,
+        'otp': params.otp
     });
 
     if (!account) throw 'Invalid token';
 
     // update password and remove reset token
-    account.passwordHash = hash(password);
+    account.passwordHash = hash(params.password);
     account.updated_at = Date.now();
-    account.resetToken = undefined;
+    // account.resetToken = {
+    //     token: randomOtpString(),
+    //     expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    // };
+    account.otp = undefined;
     await account.save();
 }
 
@@ -450,14 +455,16 @@ async function sendAlreadyRegisteredEmail(email, origin) {
 
 async function sendPasswordResetEmail(account, origin) {
     let message;
-    if (origin) {
-        const resetUrl = `${origin}/account/reset-password?token=${account.resetToken.token}`;
+    // if (origin) {
+        origin = "http://localhost:3000";
+        const resetUrl = `${origin}/auth/reset?token=${account.otp}`;
         message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                    <p><a href="${resetUrl}">${resetUrl}</a></p>`;
-    } else {
-        message = `<p>Please use the below token to reset your password with the <code>/account/reset-password</code> api route:</p>
-                   <p><code>${account.resetToken.token}</code></p>`;
-    }
+    // } else {
+    //     console.log(account.otp)
+    //     message = `<p>Please use the below token to reset your password with the <code>/account/reset-password</code> api route:</p>
+    //                <p><code>${account.otp}</code></p>`; 
+    // }
 
     await sendEmail({
         to: account.email,
@@ -466,13 +473,3 @@ async function sendPasswordResetEmail(account, origin) {
                ${message}`
     });
 }
-
-
-
-
-
-
-
-
-
-

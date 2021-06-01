@@ -123,10 +123,10 @@ function revokeToken(req, res, next) {
 function registerSchema(req, res, next) {
   console.log("validation se phle");
   const schema = Joi.object({
-    role_ids: Joi.string().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     mobile: Joi.string().required(),
+    super: Joi.boolean(),
     email: Joi.string().email().required(),
     gender: Joi.string().required(),
     dob: Joi.string().required(),
@@ -192,14 +192,14 @@ function forgotPassword(req, res, next) {
 
 function validateResetTokenSchema(req, res, next) {
   const schema = Joi.object({
-    token: Joi.string().required(),
+    otp: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }
 
 function validateResetToken(req, res, next) {
   adminService
-    .validateResetToken(req.body)
+    .validateResetToken(req.body, req.get("origin"))
     .then(() =>
       res.json({
         message: "Token is valid",
@@ -210,7 +210,8 @@ function validateResetToken(req, res, next) {
 
 function resetPasswordSchema(req, res, next) {
   const schema = Joi.object({
-    token: Joi.string().required(),
+    otp: Joi.string().required(),
+    // email:Joi.string().required(),
     password: Joi.string().min(6).required(),
     confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
   });
@@ -219,7 +220,7 @@ function resetPasswordSchema(req, res, next) {
 
 function resetPassword(req, res, next) {
   adminService
-    .resetPassword(req.body)
+    .resetPassword(req.body, req.get("origin"))
     .then(() =>
       res.json({
         message: "Password reset successful, you can now login",
