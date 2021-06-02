@@ -214,10 +214,7 @@ async function forgotPassword({
     if (!account) return;
 
     // create reset token that expires after 24 hours
-    account.resetToken = {
-        token: randomOtpString(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
-    };
+    account.otp = randomOtpString(6)
     await account.save();
 
     // send email
@@ -433,12 +430,13 @@ async function sendAlreadyRegisteredEmail(email, origin) {
 async function sendPasswordResetEmail(account, origin) {
     let message;
     if (origin) {
-        const resetUrl = `${origin}/account/reset-password?token=${account.resetToken.token}`;
+        const resetUrl = `${origin}/account/reset-password?token=${account.otp}`;
         message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                    <p><a href="${resetUrl}">${resetUrl}</a></p>`;
     } else {
+        console.log(account.otp)
         message = `<p>Please use the below token to reset your password with the <code>/account/reset-password</code> api route:</p>
-                   <p><code>${account.resetToken.token}</code></p>`;
+                   <p><code>${account.otp}</code></p>`;
     }
 
     await sendEmail({

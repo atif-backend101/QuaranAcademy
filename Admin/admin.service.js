@@ -39,7 +39,7 @@ async function authenticate({
         email
     });
 
-    if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
+    if (!account || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
     } else if (account.super === true) {
         account.verified = Date.now();
@@ -72,61 +72,7 @@ async function authenticate({
     }
 }
 
-async function student_login({
-    email,
-    password,
-    ipAddress
-}) {
-    const account = await db.Admin.findOne({
-        email
-    });
 
-    if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
-        throw 'Email or password is incorrect';
-    } else if (account.role_ids.includes("student") === false) {
-        throw 'you are not student';
-    } else { // authentication successful so generate jwt and refresh tokens
-        const jwtToken = generateJwtToken(account);
-        const refreshToken = generateRefreshToken(account, ipAddress);
-        // save refresh token
-        await refreshToken.save();
-        // return basic details and tokens
-        return {
-            // ...basicDetails(account),
-            account,
-            jwtToken,
-            refreshToken: refreshToken.token
-        };
-    }
-}
-
-async function teacher_login({
-    email,
-    password,
-    ipAddress
-}) {
-    const account = await db.Admin.findOne({
-        email
-    });
-
-    if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
-        throw 'Email or password is incorrect';
-    } else if (account.role_ids.includes("teacher") === false) {
-        throw 'you are not teacher';
-    } else { // authentication successful so generate jwt and refresh tokens
-        const jwtToken = generateJwtToken(account);
-        const refreshToken = generateRefreshToken(account, ipAddress);
-        // save refresh token
-        await refreshToken.save();
-        // return basic details and tokens
-        return {
-            // ...basicDetails(account),
-            account,
-            jwtToken,
-            refreshToken: refreshToken.token
-        };
-    }
-}
 
 async function refreshToken({
     token,
@@ -330,7 +276,7 @@ async function update(id, params) {
     account.updated_at = Date.now();
     await account.save();
 
-    return basicDetails(account);
+    return account;
 }
 
 async function _delete(id) {
@@ -422,11 +368,8 @@ async function sendVerificationEmail(account, origin) {
         const verifyUrl = `${origin}/account/verify-email?token=${account.otp}`;
         message = `<p>Please click the below link to verify your email address:</p>
                    <p><a href="${verifyUrl}">${verifyUrl}</a></p>`;
-    } else {
-        message = `<p>Please use the below token to verify your email address with the <code>/account/verify-email</code> api route:</p>
-                   <p><code>${account.otp}</code></p>`;
-    }
-
+    } 
+    
     await sendEmail({
         to: account.email,
         subject: 'Sign-up Verification API - Verify Email',

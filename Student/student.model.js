@@ -36,10 +36,7 @@ const Student = new Schema({
       }
     ],
     verified: Date,
-    resetToken: {
-        token: String,
-        expires: Date
-    },
+
     otp: { type: String, },
     verified: Date,
     passwordReset: Date,

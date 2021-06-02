@@ -229,7 +229,7 @@ function forgotPasswordSchema(req, res, next) {
 }
 
 function forgotPassword(req, res, next) {
-    studentService.forgotPassword(req.body, req.get('origin'))
+    studentService.forgotPassword(req.body, req.get('http://localhost:3000'))
         .then(() => res.json({
             message: 'Please check your email for password reset instructions'
         }))
@@ -253,7 +253,7 @@ function validateResetToken(req, res, next) {
 
 function resetPasswordSchema(req, res, next) {
     const schema = Joi.object({
-        token: Joi.string().required(),
+        otp: Joi.string().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required()
     });

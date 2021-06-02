@@ -103,7 +103,7 @@ function revokeToken(req, res, next) {
   // users can revoke their own tokens and admins can revoke any tokens
   if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
     return res.status(401).json({
-      message: "Unauthorized",
+      message: "Unauthorizedd",
     });
   }
 
@@ -132,8 +132,8 @@ function registerSchema(req, res, next) {
     dob: Joi.string().required(),
     password: Joi.string().min(6).required(),
     social_provider: Joi.string(),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
-    acceptTerms: Joi.boolean().valid(true).required(),
+    // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+    // acceptTerms: Joi.boolean().valid(true).required(),
   });
   validateRequest(req, next, schema);
   console.log("validation se bad");
@@ -146,7 +146,7 @@ function register(req, res, next) {
     .then(() =>
       res.json({
         message:
-          "Registration successful, please check your email for verification instructions",
+          "Registration successful.",
       })
     )
     .then(() => console.log("api k baad"))
@@ -219,6 +219,9 @@ function resetPasswordSchema(req, res, next) {
 }
 
 function resetPassword(req, res, next) {
+  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  var origin = req.get('origin');
+  console.log("origin ====> ",origin)
   adminService
     .resetPassword(req.body, req.get("origin"))
     .then(() =>
@@ -240,8 +243,9 @@ function getById(req, res, next) {
   // users can get their own account and admins can get any account
   if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
     return res.status(401).json({
-      message: "Unauthorized",
+      message: "Unauthorizedd",
     });
+    
   }
 
   adminService
@@ -291,9 +295,12 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
   // users can update their own account and admins can update any account
-  if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+  console.log("0000")
+    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+  console.log("0000")
+
     return res.status(401).json({
-      message: "Unauthorized",
+      message: "Unauthorizedd",
     });
   }
 
