@@ -19,7 +19,7 @@ app.use(cookieSession({
 
 // allow cors requests from any origin and with credentials
 
-app.use(cors(corsOptions,{ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
 app.use('/admin', require('./Admin/admin.controller'));
