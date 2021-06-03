@@ -18,10 +18,7 @@ app.use(cookieSession({
   }))
 
 // allow cors requests from any origin and with credentials
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200 // For legacy browser support
-}
+
 app.use(cors(corsOptions,{ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes
