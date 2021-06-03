@@ -1,5 +1,5 @@
 {
-    "connectionString": "mongodb://localhost/QuranAcademy",
+    "connectionString": "mongodb+srv://admin:admin@reignsol.im54i.mongodb.net/QuranAcademy?retryWrites=true&w=majority",
     "clientID": "CLIENT_ID",
     "clientSecret": "ACEBOOK_CLIENT_SECRET",
     "callbackURL": "FACEBOOK_CALLBACK_URL",
