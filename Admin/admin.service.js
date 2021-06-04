@@ -363,7 +363,7 @@ function basicDetails(account) {
 }
 
 async function sendVerificationEmail(account, origin) {
-    let message ="defined";
+    let message ="";
     if (origin) {
         const verifyUrl = `${origin}/account/verify-email?token=${account.otp}`;
         message = `<p>Please click the below link to verify your email address:</p>
@@ -374,8 +374,7 @@ async function sendVerificationEmail(account, origin) {
         to: account.email,
         subject: 'Sign-up Verification API - Verify Email',
         html: `<h4>Verify Email</h4>
-               <p>Thanks for registering!</p>
-               ${message}`
+               <p>Thanks for registering!</p>`
     });
 }
 
