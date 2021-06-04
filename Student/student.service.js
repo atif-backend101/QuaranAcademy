@@ -222,14 +222,14 @@ async function forgotPassword({
 }
 
 async function validateResetToken(params) {
-    const account = await db.Admin.findOne(params);
+    const account = await db.Student.findOne(params);
     console.log("....")
 
     if (!account) throw 'Invalid token';
 }
 
 async function resetPassword(params) {
-    const account = await db.Admin.findOne({
+    const account = await db.Student.findOne({
         // 'email': params.email,
         'otp': params.otp
     });
