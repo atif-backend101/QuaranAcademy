@@ -166,7 +166,7 @@ async function register(params, origin) {
     await account.save();
 
 
-    // send email
+    // // send email
     await sendVerificationEmail(account, origin);
 }
 
