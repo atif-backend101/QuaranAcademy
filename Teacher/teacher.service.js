@@ -49,9 +49,9 @@ async function authenticate({
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
-    } else if (account.role_ids.includes("admin") === false) {
-        throw 'you are not admin';
-    } else { // authentication successful so generate jwt and refresh tokens
+    } //else if (account.role_ids.includes("admin") === false) {
+        //throw 'you are not admin';}
+         else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
