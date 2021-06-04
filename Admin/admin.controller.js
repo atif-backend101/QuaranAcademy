@@ -298,8 +298,6 @@ function update(req, res, next) {
   // users can update their own account and admins can update any account
  
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
- 
-
     return res.status(401).json({
       message: "Unauthorizeddddddddd",
     });
