@@ -250,36 +250,29 @@ async function forgotPassword({
     await sendPasswordResetEmail(account, origin);
 }
 
-async function validateResetToken({
-    token
-}) {
-    const account = await db.Teacher.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
-    });
+async function validateResetToken(params) {
+    const account = await db.Teacher.findOne(params);
+    console.log("....")
 
     if (!account) throw 'Invalid token';
 }
 
-async function resetPassword({
-    token,
-    password
-}) {
+async function resetPassword(params) {
     const account = await db.Teacher.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
+        // 'email': params.email,
+        'otp': params.otp
     });
 
     if (!account) throw 'Invalid token';
 
     // update password and remove reset token
-    account.passwordHash = hash(password);
+    account.passwordHash = hash(params.password);
     account.updated_at = Date.now();
-    account.resetToken = undefined;
+    // account.resetToken = {
+    //     token: randomOtpString(),
+    //     expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    // };
+    account.otp = undefined;
     await account.save();
 }
 
