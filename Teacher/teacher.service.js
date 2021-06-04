@@ -232,7 +232,7 @@ async function verifyEmail(params) {
 async function forgotPassword({
     email
 }, origin) {
-    const account = await db.Student.findOne({
+    const account = await db.Teacher.findOne({
         email
     });
 
