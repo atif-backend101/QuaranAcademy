@@ -254,7 +254,7 @@ function validateResetToken(req, res, next) {
 
 function resetPasswordSchema(req, res, next) {
     const schema = Joi.object({
-        token: Joi.string().required(),
+        otp: Joi.string().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required()
     });
