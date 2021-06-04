@@ -8,11 +8,11 @@ const Student = new Schema({
           ref: "class"
         }
       ],
-      role_ids: 
-        {
-          type: String,
-          default: "Student"
-        },
+      // role_ids: 
+      //   {
+      //     type: String,
+      //     default: "Student"
+      //   },
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String},
