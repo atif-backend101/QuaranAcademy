@@ -221,28 +221,17 @@ async function forgotPassword({
     await sendPasswordResetEmail(account, origin);
 }
 
-async function validateResetToken({
-    token
-}) {
-    const account = await db.Student.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
-    });
+async function validateResetToken(params) {
+    const account = await db.Admin.findOne(params);
+    console.log("....")
 
     if (!account) throw 'Invalid token';
 }
 
-async function resetPassword({
-    token,
-    password
-}) {
-    const account = await db.Student.findOne({
-        'resetToken.token': token,
-        'resetToken.expires': {
-            $gt: Date.now()
-        }
+async function resetPassword(params) {
+    const account = await db.Admin.findOne({
+        // 'email': params.email,
+        'otp': params.otp
     });
 
     if (!account) throw 'Invalid token';
