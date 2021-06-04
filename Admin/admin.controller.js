@@ -104,7 +104,7 @@ function revokeToken(req, res, next) {
   // users can revoke their own tokens and admins can revoke any tokens
   if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
     return res.status(401).json({
-      message: "Unauthorizedd",
+      message: "Unauthorized",
     });
   }
 
@@ -244,7 +244,7 @@ function getById(req, res, next) {
   // users can get their own account and admins can get any account
   if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
     return res.status(401).json({
-      message: "Unauthorizedd",
+      message: "Unauthorized",
     });
     
   }
@@ -301,7 +301,7 @@ function update(req, res, next) {
  
 
     return res.status(401).json({
-      message: "Unauthorizedd",
+      message: "Unauthorizeddddddddd",
     });
   }
 
