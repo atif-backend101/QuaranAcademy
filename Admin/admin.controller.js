@@ -277,38 +277,18 @@ function create(req, res, next) {
 
 function updateSchema(req, res, next) {
   const schemaRules = {
-    title: Joi.string().empty(""),
-    firstName: Joi.string().empty(""),
-    lastName: Joi.string().empty(""),
-    email: Joi.string().email().empty(""),
-    password: Joi.string().min(6).empty(""),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).empty(""),
+      firstName: Joi.string().required(),
   };
 
-  // only admins can update role
-  if (req.user.role === Role.Admin) {
-    schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty("");
-  }
 
-  const schema = Joi.object(schemaRules).with("password", "confirmPassword");
+  const schema = Joi.object(schemaRules);
   validateRequest(req, next, schema);
 }
 
 function update(req, res, next) {
-  // users can update their own account and admins can update any account
- 
-    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
- 
-
-    return res.status(401).json({
-      message: "Unauthorizedd",
-    });
-  }
-
-  adminService
-    .update(req.params.id, req.body)
-    .then((account) => res.json(account))
-    .catch(next);
+  adminService.update(req.params.id, req.body)
+      .then(perm => res.json(perm))
+      .catch(next);
 }
 
 function _delete(req, res, next) {
