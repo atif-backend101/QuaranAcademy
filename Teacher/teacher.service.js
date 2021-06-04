@@ -232,7 +232,7 @@ async function verifyEmail(params) {
 async function forgotPassword({
     email
 }, origin) {
-    const account = await db.Teacher.findOne({
+    const account = await db.Student.findOne({
         email
     });
 
@@ -240,10 +240,7 @@ async function forgotPassword({
     if (!account) return;
 
     // create reset token that expires after 24 hours
-    account.resetToken = {
-        token: randomOtpString(),
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
-    };
+    account.otp = randomOtpString(6)
     await account.save();
 
     // send email
