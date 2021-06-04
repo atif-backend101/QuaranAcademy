@@ -180,7 +180,6 @@ function revokeToken(req, res, next) {
 function registerSchema(req, res, next) {
     console.log("validation se phle")
     const schema = Joi.object({
-        role_ids: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         mobile: Joi.string().required(),

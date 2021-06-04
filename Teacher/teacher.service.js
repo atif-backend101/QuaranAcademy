@@ -77,9 +77,9 @@ async function student_login({
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
-    } else if (account.role_ids.includes("student") === false) {
-        throw 'you are not student';
-    } else { // authentication successful so generate jwt and refresh tokens
+    } //else if (account.role_ids.includes("student") === false) {
+        //throw 'you are not student';}
+         else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
@@ -105,9 +105,9 @@ async function teacher_login({
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
-    } else if (account.role_ids.includes("teacher") === false) {
-        throw 'you are not teacher';
-    } else { // authentication successful so generate jwt and refresh tokens
+    } //else if (account.role_ids.includes("teacher") === false) {
+        //throw 'you are not teacher';}
+        else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
