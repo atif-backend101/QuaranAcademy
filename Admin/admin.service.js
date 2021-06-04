@@ -363,7 +363,7 @@ function basicDetails(account) {
 }
 
 async function sendVerificationEmail(account, origin) {
-    let message;
+    let message ="defined";
     if (origin) {
         const verifyUrl = `${origin}/account/verify-email?token=${account.otp}`;
         message = `<p>Please click the below link to verify your email address:</p>
