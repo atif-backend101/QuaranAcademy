@@ -26,6 +26,7 @@ module.exports = {
     revokeToken,
     register,
     verifyEmail,
+    verifyForgotPassword,
     forgotPassword,
     validateResetToken,
     resetPassword,
@@ -203,6 +204,17 @@ async function verifyEmail(params) {
     await account.save();
 }
 
+async function verifyForgotPassword(params) {
+    const account = await db.Student.findOne(params);
+    console.log(account)
+    if (!account) throw 'Verification failed';
+
+    account.verified = Date.now();
+    account.otp = undefined;
+    account.status = "active";
+    await account.save();
+}
+
 async function forgotPassword({
     email
 }, origin) {
@@ -281,6 +293,7 @@ async function update(id, params,token) {
     const account = await getAccount(id);
 
     if(account.jwtToken !== token ){
+        console.log("token ===> ",token)
         throw "you are not allowed"
     }
 

@@ -84,6 +84,7 @@ router.get('/google/callback', passport.authenticate('google', {
     }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
+router.post('/fp-email', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
@@ -221,6 +222,21 @@ function verifyEmail(req, res, next) {
         .catch(next);
 }
 
+function verifyfpSchema(req, res, next) {
+    const schema = Joi.object({
+        otp: Joi.string().required()
+    }); 
+    validateRequest(req, next, schema);
+}
+
+function verifyfp(req, res, next) {
+    studentService.verifyForgotPassword(req.body)
+        .then(() => res.json({
+            message: 'Verification successful, you can now login'
+        }))
+        .catch(next);
+}
+
 function forgotPasswordSchema(req, res, next) {
     const schema = Joi.object({
         email: Joi.string().email().required()
@@ -333,7 +349,9 @@ function update(req, res, next) {
     //     });
     // }
 
-    studentService.update(req.params.id, req.body)
+    // console.log("bearer===> ",req.headers.authorization)
+
+    studentService.update(req.params.id, req.body, req.headers.authorization)
         .then(account => res.json(account))
         .catch(next);
 }
