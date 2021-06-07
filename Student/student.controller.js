@@ -84,7 +84,7 @@ router.get('/google/callback', passport.authenticate('google', {
     }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
-router.post('/fp-email', verifyfpSchema, verifyfp);
+router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
