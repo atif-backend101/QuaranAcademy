@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
-const authorize = require('../_middleware/authorize')
+const authorize = require('./authorize')
 const Role = require('../_helpers/role');
 
 const studentService = require('./student.service')
@@ -87,11 +87,11 @@ router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
-router.get('/', authorize(Role.Admin), getAll);
+router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
-// router.delete('/block/:id', _delete);
+
 
 module.exports = router;
 
@@ -327,11 +327,11 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
     // users can update their own account and admins can update any account
-    if (req.params.id !== req.user.id) {
-        return res.status(401).json({
-            message: 'Unauthorized'
-        });
-    }
+    // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+    //     return res.status(401).json({
+    //         message: 'Unauthorized'
+    //     });
+    // }
 
     studentService.update(req.params.id, req.body)
         .then(account => res.json(account))
