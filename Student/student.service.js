@@ -209,10 +209,10 @@ async function verifyForgotPassword(params) {
     console.log(account)
     if (!account) throw 'Verification failed';
 
-    account.verified = Date.now();
-    account.otp = undefined;
-    account.status = "active";
-    await account.save();
+    // account.verified = Date.now();
+    // account.otp = undefined;
+    // account.status = "active";
+    // await account.save();
 }
 
 async function forgotPassword({
