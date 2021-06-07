@@ -29,7 +29,13 @@ const Admin = new Schema({
     },
     otp: { type: String, },
     verified: Date,
-    passwordReset: Date
+    passwordReset: Date,
+    permissions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Permissions"
+      }
+    ]
 });
 
 Admin.virtual('isVerified').get(function () {
