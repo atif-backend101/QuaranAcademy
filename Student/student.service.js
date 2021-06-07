@@ -281,7 +281,7 @@ async function update(id, params) {
     const account = await getAccount(id);
 
     // validate (if email was changed)
-    if (params.email && account.email !== params.email && await db.Student.findOne({
+    if (params.email && account.email !== params.email && await db.Admin.findOne({
             email: params.email
         })) {
         throw 'Email "' + params.email + '" is already taken';
@@ -297,7 +297,7 @@ async function update(id, params) {
     account.updated_at = Date.now();
     await account.save();
 
-    return basicDetails(account);
+    return account;
 }
 
 async function _delete(id) {
