@@ -297,7 +297,7 @@ async function update(id, params) {
     account.updated_at = Date.now();
     await account.save();
 
-    return account;
+    return basicDetails(account);
 }
 
 async function _delete(id) {
