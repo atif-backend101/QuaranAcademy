@@ -277,8 +277,12 @@ async function create(params) {
     return basicDetails(account);
 }
 
-async function update(id, params) {
+async function update(id, params,token) {
     const account = await getAccount(id);
+
+    if(account.jwtToken !== token ){
+        throw "you are not allowed"
+    }
 
     // validate (if email was changed)
     if (params.email && account.email !== params.email && await db.Student.findOne({

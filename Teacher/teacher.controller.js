@@ -333,8 +333,9 @@ function update(req, res, next) {
     //         message: 'Unauthorized'
     //     });
     // }
+    console.log("bearer===> ",req.headers.authorization);
 
-    teacherService.update(req.params.id, req.body)
+    teacherService.update(req.params.id, req.body,req.headers.authorization)
         .then(account => res.json(account))
         .catch(next);
 }
