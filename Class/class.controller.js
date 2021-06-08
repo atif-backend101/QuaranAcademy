@@ -62,7 +62,7 @@ function getAllClasses(req, res, next) {
 function addStudentsToClassSchema(req, res, next) {
   const schemaRules = {
     id: Joi.string().required(),
-    students: Joi.ObjectId().required()
+    students: Joi.string().required()
   };
 
   const schema = Joi.object(schemaRules);
