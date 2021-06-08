@@ -28,6 +28,7 @@ router.post("/revoke-token", authorize(), revokeTokenSchema, revokeToken);
 router.post("/register", registerSchema, register);
 
 router.post("/verify-email", verifyEmailSchema, verifyEmail);
+router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post("/forgot-password", forgotPasswordSchema, forgotPassword);
 router.post(
   "/validate-reset-token",
@@ -171,6 +172,21 @@ function verifyEmail(req, res, next) {
       })
     )
     .catch(next);
+}
+
+function verifyfpSchema(req, res, next) {
+  const schema = Joi.object({
+      otp: Joi.string().required()
+  }); 
+  validateRequest(req, next, schema);
+}
+
+function verifyfp(req, res, next) {
+  adminService.verifyForgotPassword(req.body)
+      .then(() => res.json({
+          message: 'Verification successful, you can now change your password.'
+      }))
+      .catch(next);
 }
 
 function forgotPasswordSchema(req, res, next) {
