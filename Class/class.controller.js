@@ -21,7 +21,7 @@ function classAddSchema(req, res, next) {
     time_slot: Joi.string().required(),
     days: Joi.string().required(),
     max_students: Joi.number().required(),
-    fee: Joi.number(),
+    fee: Joi.number().required(),
     duration: Joi.number().required(),
     subscription_type: Joi.string().required(),
     classroom_url: Joi.string(),
@@ -62,7 +62,7 @@ function getAllClasses(req, res, next) {
 function addStudentsToClassSchema(req, res, next) {
   const schemaRules = {
     id: Joi.string().required(),
-    students: Joi.string().required()
+    students: Joi.ObjectId().required()
   };
 
   const schema = Joi.object(schemaRules);
