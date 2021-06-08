@@ -31,7 +31,7 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 // routes
-router.get('/', (req, res) => res.send('Example Home page!'))
+router.get("/", getAll);
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 
 
@@ -232,7 +232,7 @@ function verifyfpSchema(req, res, next) {
 function verifyfp(req, res, next) {
     studentService.verifyForgotPassword(req.body)
         .then(() => res.json({
-            message: 'Verification successful, you can now login'
+            message: 'Verification successful, you can now change your password.'
         }))
         .catch(next);
 }

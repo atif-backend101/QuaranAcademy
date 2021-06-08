@@ -233,7 +233,7 @@ function verifyfpSchema(req, res, next) {
 function verifyfp(req, res, next) {
     teacherService.verifyForgotPassword(req.body)
         .then(() => res.json({
-            message: 'Verification successful, you can now login'
+            message: 'Verification successful, you can now change your password.'
         }))
         .catch(next);
 }
