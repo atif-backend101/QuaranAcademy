@@ -21,7 +21,7 @@ function classAddSchema(req, res, next) {
     time_slot: Joi.string().required(),
     days: Joi.string().required(),
     max_students: Joi.number().required(),
-    fee: Joi.number().required(),
+    fee: Joi.number(),
     duration: Joi.number().required(),
     subscription_type: Joi.string().required(),
     classroom_url: Joi.string(),
