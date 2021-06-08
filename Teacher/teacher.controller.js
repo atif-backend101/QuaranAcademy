@@ -86,6 +86,7 @@ router.get('/google/callback', passport.authenticate('google', {
     }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
+router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
@@ -216,6 +217,21 @@ function verifyEmailSchema(req, res, next) {
 
 function verifyEmail(req, res, next) {
     teacherService.verifyEmail(req.body)
+        .then(() => res.json({
+            message: 'Verification successful, you can now login'
+        }))
+        .catch(next);
+}
+
+function verifyfpSchema(req, res, next) {
+    const schema = Joi.object({
+        otp: Joi.string().required()
+    }); 
+    validateRequest(req, next, schema);
+}
+
+function verifyfp(req, res, next) {
+    teacherService.verifyForgotPassword(req.body)
         .then(() => res.json({
             message: 'Verification successful, you can now login'
         }))

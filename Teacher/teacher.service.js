@@ -26,6 +26,7 @@ module.exports = {
     revokeToken,
     register,
     verifyEmail,
+    verifyForgotPassword,
     forgotPassword,
     validateResetToken,
     resetPassword,
@@ -227,6 +228,17 @@ async function verifyEmail(params) {
     account.otp = undefined;
     account.status = "active";
     await account.save();
+}
+
+async function verifyForgotPassword(params) {
+    const account = await db.Teacher.findOne(params);
+    console.log(account)
+    if (!account) throw 'Verification failed';
+
+    // account.verified = Date.now();
+    // account.otp = undefined;
+    // account.status = "active";
+    // await account.save();
 }
 
 async function forgotPassword({
