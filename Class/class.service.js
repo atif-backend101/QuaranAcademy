@@ -109,6 +109,12 @@ async function update(id, params) {
 
 async function addStudentsToClass(params) {
 
+    const std = await db.Student.findById(params.students)
+
+    console.log(std)
+
+
+
     const clas = await getClass(params.id);
     console.log("is k andar aa", clas);
     // validate
@@ -120,11 +126,18 @@ async function addStudentsToClass(params) {
             throw "student already enrolled"
         }
         clas.students.push(params.students)
+        if(std.class_ids.includes(clas.id)){
+            throw "student already enrolled"
+        }
+        else{
+            std.class_ids.push(clas.id);
+        }
 
         clas.updated_at = Date.now();
 
         await clas.save();
-        return clas
+        await std.save();
+        return {clas, std}
 
     }
 }
