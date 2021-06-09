@@ -23,6 +23,7 @@ router.get("/logout", (req, res) => {
 // In this route you can see that if the user is logged in u can acess his info in: req.user
 
 router.post("/authenticate", authenticateSchema, authenticate);
+router.post("/adminpermissions", adminPermissionSchema, adminPermission);
 router.post("/refresh-token", refreshToken);
 router.post("/revoke-token", authorize(), revokeTokenSchema, revokeToken);
 router.post("/register", registerSchema, register);
@@ -66,6 +67,23 @@ function authenticate(req, res, next) {
     .then(({ refreshToken, ...account }) => {
       setTokenCookie(res, refreshToken);
       res.json(account);
+    })
+    .catch(next);
+}
+
+function adminPermissionSchema(req, res, next) {
+  const schema = Joi.object({
+    email: Joi.string().required(),
+  });
+  validateRequest(req, next, schema);
+}
+
+function adminPermission(req, res, next) {
+  console.log("hello controller");
+  const { email } = req.body;
+  adminService
+    .adminPermission({
+      email,
     })
     .catch(next);
 }
