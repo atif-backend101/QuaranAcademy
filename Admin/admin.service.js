@@ -243,8 +243,8 @@ async function getAll() {
     return accounts
 }
 
-async function getById(id) {
-    const account = await getAccount(id);
+async function getById(permissions) {
+    const account = await getAccount(permissions);
     return basicDetails(account);
 }
 
@@ -359,7 +359,8 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified
+        isVerified,
+        permissions
     } = account;
     return {
         id,
@@ -370,7 +371,8 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified
+        isVerified,
+        permissions
     };
 }
 
