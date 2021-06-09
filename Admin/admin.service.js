@@ -238,9 +238,9 @@ async function resetPassword(params) {
     await account.save();
 }
 
-async function getAll() {
-    const accounts = await db.Admin.find();
-    return accounts
+async function getAll(id) {
+    const accounts = await db.Admin.findById(id);
+    return accounts.permissions;
 }
 
 async function getById(id) {
