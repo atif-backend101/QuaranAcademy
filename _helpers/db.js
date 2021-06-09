@@ -9,6 +9,7 @@ module.exports = {
     Student: require('../Student/student.model'),
     Teacher: require('../Teacher/teacher.model'),
     per:require('../Permissions/permission.model'),
+    Cms:require('../Cms/cms.model'),
     role:require('../Roles/role.model'),
     class:require('../Class/class.model'),
     RefreshToken: require('../accounts/refresh-token.model'),
