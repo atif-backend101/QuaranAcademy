@@ -239,7 +239,7 @@ async function resetPassword(params) {
 }
 
 async function getAll() {
-    const accounts = await db.Admin.find();
+    const accounts = await db.Admin.find({email: params.email});
     return accounts
 }
 
