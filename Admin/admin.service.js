@@ -240,7 +240,7 @@ async function resetPassword(params) {
 
 async function getAll() {
     const accounts = await db.Admin.find();
-    return accounts
+    return accounts.permissions;
 }
 
 async function getById(id) {
