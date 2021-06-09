@@ -250,7 +250,7 @@ async function getById(id) {
 }
 
 async function getBypermissions(permissions) {
-    const account = await getAccount(params.permissions);
+    const account = await getAccount(permissions);
     return basicDetails(account);
 }
 
