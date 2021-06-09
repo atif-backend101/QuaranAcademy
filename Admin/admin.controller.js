@@ -251,7 +251,7 @@ function resetPassword(req, res, next) {
 
 function getAll(req, res, next) {
   adminService
-    .getAll(req.params.permissions)
+    .getAll()
     .then((accounts) => res.json(accounts))
     .catch(next);
 }
