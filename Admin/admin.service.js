@@ -28,6 +28,7 @@ module.exports = {
     getById,
     create,
     update,
+    adminPermission,
     delete: _delete,
 };
 
@@ -71,6 +72,11 @@ async function authenticate({
             refreshToken: refreshToken.token
         };
     }
+}
+
+async function adminPermission() {
+    const accounts = await db.Admin.find();
+    return accounts.permissions;
 }
 
 
@@ -359,7 +365,8 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified
+        isVerified,
+        permissions
     } = account;
     return {
         id,
@@ -370,7 +377,8 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified
+        isVerified,
+        permissions
     };
 }
 
