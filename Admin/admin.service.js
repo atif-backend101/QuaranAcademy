@@ -313,7 +313,7 @@ async function _delete(id) {
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Admin.findById(id);
+    const account = await db.Admin.findById(permissions);
     if (!account) throw 'Account not found';
     return account;
 }
