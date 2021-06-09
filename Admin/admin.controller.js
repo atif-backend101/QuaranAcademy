@@ -266,7 +266,7 @@ function getById(req, res, next) {
   }
 
   adminService
-    .getById(req.params.permissions)
+    .getById(req.params.id)
     .then((account) => (account ? res.json(account) : res.sendStatus(404)))
     .catch(next);
 }

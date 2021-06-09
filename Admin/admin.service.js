@@ -243,9 +243,9 @@ async function getAll() {
     return accounts
 }
 
-async function getById(permissions) {
-    const account = await getAccount(permissions);
-    return basicDetails(account.permissions);
+async function getById(id) {
+    const account = await getAccount(id);
+    return basicDetails(account);
 }
 
 async function create(params) {
@@ -359,8 +359,7 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified,
-        permissions
+        isVerified
     } = account;
     return {
         id,
@@ -371,8 +370,7 @@ function basicDetails(account) {
         role,
         created,
         updated,
-        isVerified,
-        permissions
+        isVerified
     };
 }
 
