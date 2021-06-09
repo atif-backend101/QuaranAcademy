@@ -240,12 +240,12 @@ async function resetPassword(params) {
 
 async function getAll() {
     const accounts = await db.Admin.find();
-    return accounts.permissions;
+    return accounts
 }
 
 async function getById(id) {
     const account = await getAccount(id);
-    return basicDetails(account);
+    return basicDetails(account.permissions);
 }
 
 async function create(params) {
