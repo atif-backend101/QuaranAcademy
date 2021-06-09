@@ -37,7 +37,7 @@ router.post(
 );
 router.post("/reset-password", resetPasswordSchema, resetPassword);
 router.post("/reset-password2", resetPasswordSchema, resetPassword);
-router.get("/:id", getAll);
+router.get("/:id",authorize(), getAll);
 // router.get("/:id", authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put("/:id", authorize(), updateSchema, update);
