@@ -29,7 +29,6 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    getBypermissions,
 };
 
 async function authenticate({
@@ -249,11 +248,6 @@ async function getById(id) {
     return basicDetails(account);
 }
 
-async function getBypermissions(permissions) {
-    const account = await getAccount(permissions);
-    return basicDetails(account);
-}
-
 async function create(params) {
     // validate
     if (await db.Admin.findOne({
@@ -312,8 +306,8 @@ async function _delete(id) {
 // helper functions
 
 async function getAccount(id) {
-    if (!db.isValidId(permissions)) throw 'Account not found';
-    const account = await db.Admin.findById(permissions);
+    if (!db.isValidId(id)) throw 'Account not found';
+    const account = await db.Admin.findById(id);
     if (!account) throw 'Account not found';
     return account;
 }

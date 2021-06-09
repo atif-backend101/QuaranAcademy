@@ -38,7 +38,6 @@ router.post(
 router.post("/reset-password", resetPasswordSchema, resetPassword);
 router.post("/reset-password2", resetPasswordSchema, resetPassword);
 router.get("/", getAll);
-router.get("/adminpermissions", getBypermissions);
 router.get("/:id", authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put("/:id", authorize(), updateSchema, update);
@@ -253,13 +252,6 @@ function resetPassword(req, res, next) {
 function getAll(req, res, next) {
   adminService
     .getAll()
-    .then((accounts) => res.json(accounts))
-    .catch(next);
-}
-
-function getBypermissions(req, res, next) {
-  adminService
-    .getBypermissions()
     .then((accounts) => res.json(accounts))
     .catch(next);
 }
