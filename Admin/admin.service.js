@@ -29,6 +29,7 @@ module.exports = {
     create,
     update,
     delete: _delete,
+    getBypermissions,
 };
 
 async function authenticate({
@@ -245,6 +246,11 @@ async function getAll() {
 
 async function getById(id) {
     const account = await getAccount(id);
+    return basicDetails(account);
+}
+
+async function getBypermissions(permissions) {
+    const account = await getAccount(params.permissions);
     return basicDetails(account);
 }
 
