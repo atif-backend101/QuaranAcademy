@@ -85,11 +85,6 @@ function adminPermission(req, res, next) {
     .adminPermission({
       email,
     })
-    .then(({ refreshToken, ...account }) => {
-      setTokenCookie(res, refreshToken);
-      res.json(account);
-    })
-    .catch(next);
 }
 
 function refreshToken(req, res, next) {
