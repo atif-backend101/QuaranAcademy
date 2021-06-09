@@ -245,7 +245,7 @@ async function getAll() {
 
 async function getById(id) {
     const account = await getAccount(id);
-    return basicDetails(account.permissions);
+    return basicDetails(account);
 }
 
 async function create(params) {
