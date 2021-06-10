@@ -11,7 +11,7 @@ const cmsService = require('./cms.service')
 router.get('/', getAll);
 router.post('/add', cmsAddSchema, cmsAdd);
 router.put('/:id', updateSchema, update);
-router.delete('/:id', authorize(), _delete);
+router.delete('/:id',  _delete);
 
 module.exports = router;
 
