@@ -320,7 +320,7 @@ function update(req, res, next) {
 
   adminService
     .update(req.params.id, req.body)
-    .then((account) => res.json(account))
+    .then((account) => res.json({message : "Successfully Updated"}))
     .catch(next);
 }
 
