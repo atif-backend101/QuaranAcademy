@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
-// const authorize = require('_middleware/authorize')
+const authorize = require('_middleware/authorize');
 const Role = require('../_helpers/role');
 const cmsService = require('./cms.service')
 
@@ -11,6 +11,7 @@ const cmsService = require('./cms.service')
 router.get('/', getAll);
 router.post('/add', cmsAddSchema, cmsAdd);
 router.put('/:id', updateSchema, update);
+router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
 
@@ -51,6 +52,12 @@ function updateSchema(req, res, next) {
 function update(req, res, next) {
     cmsService.update(req.params.id, req.body)
         .then(cms => res.json(cms))
+        .catch(next);
+}
+
+function _delete(req, res, next) {
+    cmsService.delete(req.params.id)
+        .then(() => res.json({ message: 'Account deleted successfully' }))
         .catch(next);
 }
 

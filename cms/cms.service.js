@@ -19,10 +19,24 @@ module.exports = {
 
     update,
 
+
+    delete: _delete,
 };
 
 
+async function _delete(id) {
+    const account = await getAccount(id);
+    await account.remove();
+}
 
+// helper functions
+
+async function getAccount(id) {
+    if (!db.isValidId(id)) throw 'Account not found';
+    const account = await db.Cms.findById(id);
+    if (!account) throw 'Account not found';
+    return account;
+}
 
 
 async function cmsAdd(params, origin) {
