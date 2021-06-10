@@ -297,8 +297,7 @@ function updateSchema(req, res, next) {
     firstName: Joi.string().empty(""),
     lastName: Joi.string().empty(""),
     email: Joi.string().email().empty(""),
-    password: Joi.string().min(6).empty(""),
-    confirmPassword: Joi.string().valid(Joi.ref("password")).empty(""),
+    password: Joi.string().min(6).empty("")
   };
 
   // only admins can update role
@@ -306,7 +305,7 @@ function updateSchema(req, res, next) {
     schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty("");
   }
 
-  const schema = Joi.object(schemaRules).with("password", "confirmPassword");
+  const schema = Joi.object(schemaRules);
   validateRequest(req, next, schema);
 }
 
