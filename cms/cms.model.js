@@ -9,9 +9,6 @@ const Cms = new Schema({
     updated_at: Date,
 });
 
-// Permission.virtual('isVerified').get(function () {
-//     return !!(this.verified || this.passwordReset);
-// });
 
 Cms.set('toJSON', {
     virtuals: true,

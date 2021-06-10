@@ -25,7 +25,7 @@ function cmsAddSchema(req, res, next) {
 
 function cmsAdd(req, res, next) {
     cmsService.cmsAdd (req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Cms Added' }))
+        .then(() => res.json({ message: 'Title And Content Added' }))
         .catch(next);
 }
 

@@ -27,14 +27,14 @@ module.exports = {
 
 async function cmsAdd(params, origin) {
     // validate
-    if (await db.per.findOne({ Title: params.Title })) {
+    if (await db.Cms.findOne({ Title: params.Title })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         throw "Cannot add same Title twice.";
     }
 
     // create permission object
-    const cms = new db.per(params);
+    const cms = new db.Cms(params);
 
 
     // save account
@@ -47,14 +47,14 @@ async function cmsAdd(params, origin) {
 
 async function getCms(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const cms = await db.per.findById(id);
+    const cms = await db.Cms.findById(id);
     if (!cms) throw 'Cms not found';
     return cms;
 }
 
 
 async function getAll() {
-    const cms = await db.per.find();
+    const cms = await db.Cms.find();
     return cms
 }
 
@@ -64,10 +64,10 @@ async function getAll() {
 async function update(id, params) {
     const cms = await getCms(id);
 
-    const john = await db.per.findOne({ _id :  id , Title: params.Title });
+    const john = await db.Cms.findOne({ _id :  id , Title: params.Title });
     console.log(john);
     // validate (if email was changed)
-    if (await db.per.findOne({ _id: { $ne: id }, Title: params.Title })) {
+    if (await db.Cms.findOne({ _id: { $ne: id }, Title: params.Title })) {
         throw 'Cms "' + params.Title + '" already exists';
     }
 
