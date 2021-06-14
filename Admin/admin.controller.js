@@ -70,10 +70,14 @@ function authenticate(req, res, next) {
     })
     .then(({
       refreshToken,
+      permissionss,
       ...account
     }) => {
       setTokenCookie(res, refreshToken);
-      res.json(account);
+      res.json({
+        account,
+        permissionss
+      });
     })
     .catch(next);
 }

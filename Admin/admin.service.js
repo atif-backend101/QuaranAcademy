@@ -45,7 +45,21 @@ async function authenticate({
 }) {
     const account = await db.Admin.findOne({
         email
-    }).populate('permissions', 'Name');
+    }).populate("permissions");
+
+    const perms = await db.Admin.findById(account.id);
+
+    console.log(perms)
+
+    var permissionss = []
+
+    for (let i in perms.permissions) {
+        // console.log(i)
+        const adminP = await db.per.findById(ObjectId(perms.permissions[i]));
+        permissionss.push(adminP.Name)
+    }
+
+
 
 
     if (!account || !bcrypt.compareSync(password, account.passwordHash)) {
@@ -56,10 +70,12 @@ async function authenticate({
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
+
         await refreshToken.save();
         // return basic details and tokens
         return {
             // ...basicDetails(account),
+            permissionss,
             account,
             jwtToken,
             refreshToken: refreshToken.token
@@ -71,10 +87,12 @@ async function authenticate({
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
         await refreshToken.save();
+
         // return basic details and tokens
         return {
             // ...basicDetails(account),
             account,
+            permissionss,
             jwtToken,
             refreshToken: refreshToken.token
         };
