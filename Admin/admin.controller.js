@@ -7,6 +7,7 @@ const Role = require("../_helpers/role");
 
 const adminService = require("./admin.service");
 
+
 // routes
 // router.get('/', (req, res) => res.send('Example Home page!'))
 router.get("/failed", (req, res) => res.send("You Failed to log in!"));
@@ -36,12 +37,13 @@ router.post(
   validateResetToken
 );
 router.post("/reset-password", resetPasswordSchema, resetPassword);
-router.post("/reset-password2", resetPasswordSchema, resetPassword);
 router.get("/", getAll);
 router.get("/:id", authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put("/:id", authorize(), updateSchema, update);
 router.delete("/block/:id", _delete);
+
+router.get("/permissions/:id", authorize(), getPermissions);
 
 module.exports = router;
 
@@ -55,7 +57,10 @@ function authenticateSchema(req, res, next) {
 
 function authenticate(req, res, next) {
   console.log("hello controller");
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
   const ipAddress = req.ip;
   adminService
     .authenticate({
@@ -63,7 +68,10 @@ function authenticate(req, res, next) {
       password,
       ipAddress,
     })
-    .then(({ refreshToken, ...account }) => {
+    .then(({
+      refreshToken,
+      ...account
+    }) => {
       setTokenCookie(res, refreshToken);
       res.json(account);
     })
@@ -78,7 +86,10 @@ function refreshToken(req, res, next) {
       token,
       ipAddress,
     })
-    .then(({ refreshToken, ...account }) => {
+    .then(({
+      refreshToken,
+      ...account
+    }) => {
       setTokenCookie(res, refreshToken);
       res.json(account);
     })
@@ -134,6 +145,7 @@ function registerSchema(req, res, next) {
     dob: Joi.string().required(),
     password: Joi.string().min(6).required(),
     social_provider: Joi.string(),
+    permissions: Joi.array(),
     // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
     // acceptTerms: Joi.boolean().valid(true).required(),
   });
@@ -147,8 +159,7 @@ function register(req, res, next) {
     .register(req.body, req.get("origin"))
     .then(() =>
       res.json({
-        message:
-          "Registration successful.",
+        message: "Registration successful.",
       })
     )
     .then(() => console.log("api k baad"))
@@ -176,17 +187,17 @@ function verifyEmail(req, res, next) {
 
 function verifyfpSchema(req, res, next) {
   const schema = Joi.object({
-      otp: Joi.string().required()
-  }); 
+    otp: Joi.string().required()
+  });
   validateRequest(req, next, schema);
 }
 
 function verifyfp(req, res, next) {
   adminService.verifyForgotPassword(req.body)
-      .then(() => res.json({
-          message: 'Verification successful, you can now change your password.'
-      }))
-      .catch(next);
+    .then(() => res.json({
+      message: 'Verification successful, you can now change your password.'
+    }))
+    .catch(next);
 }
 
 function forgotPasswordSchema(req, res, next) {
@@ -238,7 +249,7 @@ function resetPasswordSchema(req, res, next) {
 function resetPassword(req, res, next) {
   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   var origin = req.get('origin');
-  console.log("origin ====> ",origin)
+  console.log("origin ====> ", origin)
   adminService
     .resetPassword(req.body, req.get("origin"))
     .then(() =>
@@ -262,7 +273,7 @@ function getById(req, res, next) {
     return res.status(401).json({
       message: "Unauthorized",
     });
-    
+
   }
 
   adminService
@@ -311,16 +322,18 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
   // users can update their own account and admins can update any account
- 
-    if (req.params.id !== req.user.id && req.user.role !== Role.Admin && req.params.super == false) {
-    return res.status(401).json({
-      message: "Unauthorizeddddddddd",
-    });
-  }
+
+  //   if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+  //   return res.status(401).json({
+  //     message: "Unauthorizeddddddddd",
+  //   });
+  // }
 
   adminService
-    .update(req.params.id, req.body)
-    .then(() => res.json({message : "Successfully Updated"}))
+    .update(req.params.id, req.body, req.user)
+    .then(() => res.json({
+      message: "Successfully Updated"
+    }))
     .catch(next);
 }
 
@@ -358,7 +371,9 @@ function something(req, res, next) {
 function google(req, res, next) {
   adminService
     .google(req.user, req.get("origin"))
-    .then(({ ...googleUser }) => {
+    .then(({
+      ...googleUser
+    }) => {
       res.json(googleUser);
     })
     .catch(next);
@@ -367,7 +382,9 @@ function google(req, res, next) {
 function facebook(req, res, next) {
   adminService
     .facebook(req.user, req.get("origin"))
-    .then(({ ...facebookUser }) => {
+    .then(({
+      ...facebookUser
+    }) => {
       res.json(facebookUser);
     })
     .catch(next);
@@ -383,7 +400,10 @@ function student_loginSchema(req, res, next) {
 
 function student_login(req, res, next) {
   console.log("hello controller");
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
   const ipAddress = req.ip;
   adminService
     .student_login({
@@ -391,7 +411,10 @@ function student_login(req, res, next) {
       password,
       ipAddress,
     })
-    .then(({ refreshToken, ...account }) => {
+    .then(({
+      refreshToken,
+      ...account
+    }) => {
       setTokenCookie(res, refreshToken);
       res.json(account);
     })
@@ -408,7 +431,10 @@ function teacher_loginSchema(req, res, next) {
 
 function teacher_login(req, res, next) {
   console.log("hello controller");
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
   const ipAddress = req.ip;
   adminService
     .teacher_login({
@@ -416,9 +442,21 @@ function teacher_login(req, res, next) {
       password,
       ipAddress,
     })
-    .then(({ refreshToken, ...account }) => {
+    .then(({
+      refreshToken,
+      ...account
+    }) => {
       setTokenCookie(res, refreshToken);
       res.json(account);
     })
     .catch(next);
+}
+
+
+function getPermissions(req, res, next) {
+
+  adminService.getPermissions(req.params.id)
+    .then((permissions) => res.json(permissions))
+    .catch(next);
+
 }

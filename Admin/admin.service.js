@@ -8,6 +8,12 @@ const db = require('../_helpers/db');
 const {
     error
 } = require('console');
+const {
+    ObjectID
+} = require('bson');
+const {
+    ObjectId
+} = require('bson');
 
 
 
@@ -15,6 +21,7 @@ const {
 
 
 module.exports = {
+    getPermissions,
     authenticate,
     refreshToken,
     revokeToken,
@@ -38,7 +45,8 @@ async function authenticate({
 }) {
     const account = await db.Admin.findOne({
         email
-    });
+    }).populate('permissions', 'Name');
+
 
     if (!account || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
@@ -193,7 +201,9 @@ async function verifyForgotPassword(params) {
     // await account.save();
 }
 
-async function forgotPassword({email}, origin) {
+async function forgotPassword({
+    email
+}, origin) {
     const account = await db.Admin.findOne({
         email
     });
@@ -268,27 +278,96 @@ async function create(params) {
     return basicDetails(account);
 }
 
-async function update(id, params) {
+async function update(id, params, currentAdmin) {
     const account = await getAccount(id);
 
-    // validate (if email was changed)
-    if (params.email && account.email !== params.email && await db.Admin.findOne({
-            email: params.email
-        })) {
-        throw 'Email "' + params.email + '" is already taken';
+    const cAdmin = await getAccount(currentAdmin.id);
+
+    if (cAdmin.super === true) {
+
+        // console.log("super hai")
+        if (params.email && account.email !== params.email && await db.Admin.findOne({
+                email: params.email
+            })) {
+            throw 'Email "' + params.email + '" is already taken';
+        }
+
+        // hash password if it was entered
+        if (params.password) {
+            params.passwordHash = hash(params.password);
+        }
+
+        // copy params to account and save
+        Object.assign(account, params);
+        account.updated_at = Date.now();
+        await account.save();
+
+        return account;
+
+
+    } else if (cAdmin.id === account.id) {
+        // console.log("super nhi hia per id same hai")
+        if (params.email && account.email !== params.email && await db.Admin.findOne({
+                email: params.email
+            })) {
+            throw 'Email "' + params.email + '" is already taken';
+        }
+
+        // hash password if it was entered
+        if (params.password) {
+            params.passwordHash = hash(params.password);
+        }
+
+        // copy params to account and save
+        Object.assign(account, params);
+        account.updated_at = Date.now();
+        await account.save();
+
+        return account;
+    } else if (cAdmin.id !== account.id && cAdmin.permissions.includes("edit admins")) {
+
+        // console.log("super nhi hai or id bhi same nhi hai per permissions hai")
+        if (params.email && account.email !== params.email && await db.Admin.findOne({
+                email: params.email
+            })) {
+            throw 'Email "' + params.email + '" is already taken';
+        }
+
+        // hash password if it was entered
+        if (params.password) {
+            params.passwordHash = hash(params.password);
+        }
+
+        // copy params to account and save
+        Object.assign(account, params);
+        account.updated_at = Date.now();
+        await account.save();
+
+        return account;
+    } else {
+        throw "Unauthorizeddddddddd"
     }
 
-    // hash password if it was entered
-    if (params.password) {
-        params.passwordHash = hash(params.password);
-    }
 
-    // copy params to account and save
-    Object.assign(account, params);
-    account.updated_at = Date.now();
-    await account.save();
 
-    return account;
+    // // validate (if email was changed)
+    // if (params.email && account.email !== params.email && await db.Admin.findOne({
+    //         email: params.email
+    //     })) {
+    //     throw 'Email "' + params.email + '" is already taken';
+    // }
+
+    // // hash password if it was entered
+    // if (params.password) {
+    //     params.passwordHash = hash(params.password);
+    // }
+
+    // // copy params to account and save
+    // Object.assign(account, params);
+    // account.updated_at = Date.now();
+    // await account.save();
+
+    // return account;
 }
 
 async function _delete(id) {
@@ -375,13 +454,13 @@ function basicDetails(account) {
 }
 
 async function sendVerificationEmail(account, origin) {
-    let message ="";
+    let message = "";
     if (origin) {
         const verifyUrl = `${origin}/account/verify-email?token=${account.otp}`;
         message = `<p>Please click the below link to verify your email address:</p>
                    <p><a href="${verifyUrl}">${verifyUrl}</a></p>`;
-    } 
-    
+    }
+
     await sendEmail({
         to: account.email,
         subject: 'Sign-up Verification API - Verify Email',
@@ -410,9 +489,9 @@ async function sendAlreadyRegisteredEmail(email, origin) {
 async function sendPasswordResetEmail(account, origin) {
     let message;
     // if (origin) {
-        origin = "http://localhost:3000";
-        const resetUrl = `${origin}/auth/reset?token=${account.otp}`;
-        message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
+    origin = "http://localhost:3000";
+    const resetUrl = `${origin}/auth/reset?token=${account.otp}`;
+    message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                    <p><a href="${resetUrl}">${resetUrl}</a></p>`;
     // } else {
     //     console.log(account.otp)
@@ -426,4 +505,25 @@ async function sendPasswordResetEmail(account, origin) {
         html: `<h4>Reset Password Email</h4>
                ${message}`
     });
+}
+
+
+
+
+
+async function getPermissions(id) {
+
+    const perms = await db.Admin.findById(id);
+
+    var permissionss = []
+
+    for (let i in perms.permissions) {
+        console.log(i)
+        const adminP = await db.per.findById(ObjectId(perms.permissions[i]));
+        permissionss.push(adminP.Name)
+    }
+
+
+    return permissionss
+
 }
