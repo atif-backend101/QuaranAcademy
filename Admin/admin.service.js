@@ -14,6 +14,7 @@ const {
 const {
     ObjectId
 } = require('bson');
+var checkThis = false;
 
 
 
@@ -301,6 +302,12 @@ async function update(id, params, currentAdmin) {
 
     const cAdmin = await getAccount(currentAdmin.id);
 
+    cAdmin.permissions.filter(function (check) {
+        if (check.Name == "Edit Admins") {
+            checkThis = true;
+        }
+    });
+
     if (cAdmin.super === true) {
 
         // console.log("super hai")
@@ -342,7 +349,7 @@ async function update(id, params, currentAdmin) {
         await account.save();
 
         return account;
-    } else if (cAdmin.id !== account.id && cAdmin.permissions.includes("edit admins")) {
+    } else if ((cAdmin.id !== account.id) && (checkThis == true)) {
 
         // console.log("super nhi hai or id bhi same nhi hai per permissions hai")
         if (params.email && account.email !== params.email && await db.Admin.findOne({
@@ -404,7 +411,7 @@ async function _delete(id) {
 
 async function getAccount(id) {
     if (!db.isValidId(id)) throw 'Account not found';
-    const account = await db.Admin.findById(id);
+    const account = await db.Admin.findById(id).populate("permissions");
     if (!account) throw 'Account not found';
     return account;
 }
@@ -428,7 +435,7 @@ function generateJwtToken(account) {
         sub: account.id,
         id: account.id
     }, config.secret, {
-        expiresIn: '15m'
+        expiresIn: '1440m'
     });
 }
 

@@ -18,13 +18,16 @@ module.exports = router;
 function roleAddSchema(req, res, next) {
     const schema = Joi.object({
         Name: Joi.string().required(),
+        permissions: Joi.array().required()
     });
     validateRequest(req, next, schema);
 }
 
 function roleAdd(req, res, next) {
-    roleService.roleAdd (req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Role Added' }))
+    roleService.roleAdd(req.body, req.get('origin'))
+        .then(() => res.json({
+            message: 'Role Added'
+        }))
         .catch(next);
 }
 
@@ -51,6 +54,3 @@ function roleUpdate(req, res, next) {
         .then(role => res.json(role))
         .catch(next);
 }
-
-
-

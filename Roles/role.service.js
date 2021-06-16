@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require('../_helpers/send-email');
 const db = require('../_helpers/db');
-const { error } = require('console');
+const {
+    error
+} = require('console');
 
 
 // Social provider karna hai.....
@@ -23,7 +25,9 @@ module.exports = {
 
 async function roleAdd(params, origin) {
     // validate
-    if (await db.role.findOne({ Name: params.Name })) {
+    if (await db.role.findOne({
+            Name: params.Name
+        })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         throw "Cannot add same role twice.";
@@ -50,7 +54,7 @@ async function getRole(id) {
 
 
 async function getAllRoles() {
-    const role = await db.role.find();
+    const role = await db.role.find().populate("permissions");
     return role
 }
 
@@ -60,10 +64,18 @@ async function getAllRoles() {
 async function update(id, params) {
     const role = await getRole(id);
 
-    const john = await db.role.findOne({ _id :  id , Name: params.Name });
+    const john = await db.role.findOne({
+        _id: id,
+        Name: params.Name
+    });
     console.log(john);
     // validate (if email was changed)
-    if (await db.role.findOne({ _id: { $ne: id }, Name: params.Name })) {
+    if (await db.role.findOne({
+            _id: {
+                $ne: id
+            },
+            Name: params.Name
+        })) {
         throw 'Role "' + params.Name + '" already exists';
     }
 
@@ -75,10 +87,3 @@ async function update(id, params) {
 
     return role;
 }
-
-
-
-
-
-
-
