@@ -72,7 +72,7 @@ async function getClass(id) {
 
 
 async function getAllClasses() {
-    const clas = await db.class.find();
+    const clas = await db.class.find().populate("students").populate("teacher").populate("course");
     return clas
 }
 
@@ -108,15 +108,10 @@ async function update(id, params) {
 
 
 async function addStudentsToClass(params) {
-
-    const std = await db.Student.findById(params.students)
-
-    console.log(std)
-
-
+    const std = await db.Student.findById(params.students);
 
     const clas = await getClass(params.id);
-    console.log("is k andar aa", clas);
+    // console.log("is k andar aa", clas);
     // validate
     if (clas.students.length === clas.max_students) {
         throw "Class full. No student can be added";
@@ -126,10 +121,9 @@ async function addStudentsToClass(params) {
             throw "student already enrolled"
         }
         clas.students.push(params.students)
-        if(std.class_ids.includes(clas.id)){
+        if (std.class_ids.includes(clas.id)) {
             throw "student already enrolled"
-        }
-        else{
+        } else {
             std.class_ids.push(clas.id);
         }
 
@@ -137,7 +131,9 @@ async function addStudentsToClass(params) {
 
         await clas.save();
         await std.save();
-        return {clas, std}
+        return {
+            clas,
+        }
 
     }
 }

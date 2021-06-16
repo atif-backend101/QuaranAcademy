@@ -16,8 +16,8 @@ module.exports = router;
 
 function classAddSchema(req, res, next) {
   const schema = Joi.object({
-    teacher: Joi.string().required(),
-    title: Joi.string().required(),
+    teacher: Joi.array().required(),
+    course: Joi.string().required(),
     time_slot: Joi.string().required(),
     days: Joi.string().required(),
     max_students: Joi.number().required(),
@@ -32,7 +32,9 @@ function classAddSchema(req, res, next) {
 function classAdd(req, res, next) {
   classService
     .classAdd(req.body, req.get("origin"))
-    .then(() => res.json({ message: "Class Added" }))
+    .then(() => res.json({
+      message: "Class Added"
+    }))
     .catch(next);
 }
 
@@ -75,5 +77,3 @@ function addStudentsToClass(req, res, next) {
     .then((accounts) => res.json(accounts))
     .catch(next);
 }
-
-

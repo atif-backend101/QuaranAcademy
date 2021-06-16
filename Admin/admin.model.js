@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const Admin = new Schema({
 
-  role_ids: {
-    type: String,
-    default: "admin"
-  },
+  roles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Roles"
+  }],
   firstName: {
     type: String
   },
