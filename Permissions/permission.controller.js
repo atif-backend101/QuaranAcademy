@@ -23,15 +23,21 @@ function permissionAddSchema(req, res, next) {
 }
 
 function permissionAdd(req, res, next) {
-    permissionService.permissionAdd (req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Permission Added' }))
+    permissionService.permissionAdd(req.body, req.get('origin'))
+        .then(() => res.json({
+            message: 'Permission Added'
+        }))
         .catch(next);
 }
 
 
 function getAll(req, res, next) {
     permissionService.getAll()
-        .then(accounts => res.json(accounts))
+        .then(accounts => res.json({
+            status: 200,
+            message: 'Success',
+            data: accounts
+        }))
         .catch(next);
 }
 
@@ -51,6 +57,3 @@ function update(req, res, next) {
         .then(perm => res.json(perm))
         .catch(next);
 }
-
-
-
