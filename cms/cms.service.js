@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require('../_helpers/send-email');
 const db = require('../_helpers/db');
-const { error } = require('console');
+const {
+    error
+} = require('console');
 
 
 // Social provider karna hai.....
@@ -41,7 +43,9 @@ async function getAccount(id) {
 
 async function cmsAdd(params, origin) {
     // validate
-    if (await db.Cms.findOne({ Title: params.Title })) {
+    if (await db.Cms.findOne({
+            Title: params.Title
+        })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         throw "Cannot add same Title twice.";
@@ -62,7 +66,7 @@ async function cmsAdd(params, origin) {
 async function getCms(id) {
     if (!db.isValidId(id)) throw 'Account not found';
     const cms = await db.Cms.findById(id);
-    if (!cms) throw 'Cms not found';
+    if (!cms) throw 'Not found';
     return cms;
 }
 
@@ -78,10 +82,18 @@ async function getAll() {
 async function update(id, params) {
     const cms = await getCms(id);
 
-    const john = await db.Cms.findOne({ _id :  id , Title: params.Title });
+    const john = await db.Cms.findOne({
+        _id: id,
+        Title: params.Title
+    });
     console.log(john);
     // validate (if email was changed)
-    if (await db.Cms.findOne({ _id: { $ne: id }, Title: params.Title })) {
+    if (await db.Cms.findOne({
+            _id: {
+                $ne: id
+            },
+            Title: params.Title
+        })) {
         throw 'Cms "' + params.Title + '" already exists';
     }
 
@@ -93,10 +105,3 @@ async function update(id, params) {
 
     return cms;
 }
-
-
-
-
-
-
-

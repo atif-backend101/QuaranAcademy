@@ -16,11 +16,21 @@ module.exports = {
     roleAdd,
     getAllRoles,
     update,
+    delete: _delete,
 
 };
 
+async function _delete(id) {
+    const account = await getAccount(id);
+    await account.remove();
+}
 
-
+async function getAccount(id) {
+    if (!db.isValidId(id)) throw 'Role not found';
+    const account = await db.role.findById(id);
+    if (!account) throw 'Role not found';
+    return account;
+}
 
 
 async function roleAdd(params, origin) {

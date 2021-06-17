@@ -11,6 +11,7 @@ const roleService = require('./role.service')
 router.get('/', getAllRoles);
 router.post('/add', roleAddSchema, roleAdd);
 router.put('/:id', roleUpdateSchema, roleUpdate);
+router.delete('/:id', _delete);
 
 module.exports = router;
 
@@ -54,5 +55,14 @@ function roleUpdateSchema(req, res, next) {
 function roleUpdate(req, res, next) {
     roleService.update(req.params.id, req.body)
         .then(role => res.json(role))
+        .catch(next);
+}
+
+
+function _delete(req, res, next) {
+    roleService.delete(req.params.id)
+        .then(() => res.json({
+            message: 'Role deleted successfully'
+        }))
         .catch(next);
 }

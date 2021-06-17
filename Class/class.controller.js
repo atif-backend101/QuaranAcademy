@@ -10,6 +10,7 @@ const classService = require("./class.service");
 router.get("/", getAllClasses);
 router.post("/add", classAddSchema, classAdd);
 // router.put("/:id", classUpdateSchema, classUpdate);
+router.delete('/:id', _delete);
 router.put("/addstudentstoclass", addStudentsToClassSchema, addStudentsToClass);
 
 module.exports = router;
@@ -59,5 +60,14 @@ function addStudentsToClass(req, res, next) {
   classService
     .addStudentsToClass(req.body)
     .then((accounts) => res.json(accounts))
+    .catch(next);
+}
+
+
+function _delete(req, res, next) {
+  classService.delete(req.params.id)
+    .then(() => res.json({
+      message: 'Class deleted successfully'
+    }))
     .catch(next);
 }

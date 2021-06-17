@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require('../_helpers/send-email');
 const db = require('../_helpers/db');
-const { error } = require('console');
+const {
+    error
+} = require('console');
 
 
 // Social provider karna hai.....
@@ -19,15 +21,32 @@ module.exports = {
 
     update,
 
+    delete: _delete,
+
 };
 
 
+async function _delete(id) {
+    const account = await getAccount(id);
+    await account.remove();
+}
+
+
+
+async function getAccount(id) {
+    if (!db.isValidId(id)) throw 'Permission not found';
+    const account = await db.per.findById(id);
+    if (!account) throw 'Permission not found';
+    return account;
+}
 
 
 
 async function permissionAdd(params, origin) {
     // validate
-    if (await db.per.findOne({ Name: params.Name })) {
+    if (await db.per.findOne({
+            Name: params.Name
+        })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         throw "Cannot add same permission twice.";
@@ -64,10 +83,18 @@ async function getAll() {
 async function update(id, params) {
     const perm = await getPermission(id);
 
-    const john = await db.per.findOne({ _id :  id , Name: params.Name });
+    const john = await db.per.findOne({
+        _id: id,
+        Name: params.Name
+    });
     console.log(john);
     // validate (if email was changed)
-    if (await db.per.findOne({ _id: { $ne: id }, Name: params.Name })) {
+    if (await db.per.findOne({
+            _id: {
+                $ne: id
+            },
+            Name: params.Name
+        })) {
         throw 'Permission "' + params.Name + '" already exists';
     }
 
@@ -79,10 +106,3 @@ async function update(id, params) {
 
     return perm;
 }
-
-
-
-
-
-
-

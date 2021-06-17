@@ -22,11 +22,10 @@ router.get("/logout", (req, res) => {
 });
 
 // In this route you can see that if the user is logged in u can acess his info in: req.user
+router.use('/students', authorize(), require('../Students/student.controller'));
 router.use('/roles', authorize(), require('../Roles/role.controller'))
 router.use('/class', authorize(), require('../Class/class.controller'));
 router.use('/course', authorize(), require('../course/course.controller'));
-router.use('/student', authorize(), require('../Student/student.controller'));
-router.use('/teacher', authorize(), require('../Teacher/teacher.controller'));
 router.use('/permission', authorize(), require('../Permissions/permission.controller'));
 router.use('/cms', authorize(), require('../cms/cms.controller'));
 router.post("/authenticate", authenticateSchema, authenticate);

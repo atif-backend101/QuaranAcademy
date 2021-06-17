@@ -11,6 +11,7 @@ const permissionService = require('./permission.service')
 router.get('/', getAll);
 router.post('/add', permissionAddSchema, permissionAdd);
 router.put('/:id', updateSchema, update);
+router.delete('/:id', _delete);
 
 module.exports = router;
 
@@ -55,5 +56,13 @@ function updateSchema(req, res, next) {
 function update(req, res, next) {
     permissionService.update(req.params.id, req.body)
         .then(perm => res.json(perm))
+        .catch(next);
+}
+
+function _delete(req, res, next) {
+    permissionService.delete(req.params.id)
+        .then(() => res.json({
+            message: 'Permission deleted successfully'
+        }))
         .catch(next);
 }

@@ -21,12 +21,25 @@ module.exports = {
 
     update,
 
+    delete: _delete,
+
     addStudentsToClass
 
 };
 
 
+async function _delete(id) {
+    const account = await getAccount(id);
+    await account.remove();
+}
 
+
+async function getAccount(id) {
+    if (!db.isValidId(id)) throw 'Class not found';
+    const account = await db.class.findById(id);
+    if (!account) throw 'Class not found';
+    return account;
+}
 
 
 async function classAdd(params, origin) {
