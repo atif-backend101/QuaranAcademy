@@ -45,22 +45,6 @@ function getAllClasses(req, res, next) {
     .catch(next);
 }
 
-// function classUpdateSchema(req, res, next) {
-//   const schemaRules = {
-//     Name: Joi.string().required(),
-//   };
-
-//   const schema = Joi.object(schemaRules);
-//   validateRequest(req, next, schema);
-// }
-
-// function classUpdate(req, res, next) {
-//   classService
-//     .update(req.params.id, req.body)
-//     .then((role) => res.json(role))
-//     .catch(next);
-// }
-
 function addStudentsToClassSchema(req, res, next) {
   const schemaRules = {
     id: Joi.string().required(),
