@@ -14,7 +14,9 @@ const {
 const {
     ObjectId
 } = require('bson');
+const cookieSession = require('cookie-session');
 var checkThis = false;
+var checkThat = false;
 
 
 
@@ -46,18 +48,26 @@ async function authenticate({
 }) {
     const account = await db.Admin.findOne({
         email
-    }).populate("permissions");
+    }).populate("roles");
+
+    account.roles.filter(function (check) {
+        if (check.Name == "Admin") {
+            checkThat = true;
+        }
+    });
 
     const perms = await db.Admin.findById(account.id);
 
-    console.log(perms)
+    // console.log(perms)
 
     var permissionss = []
 
     for (let i in perms.permissions) {
-        // console.log(i)
+        console.log(perms.permissions[i])
         const adminP = await db.per.findById(ObjectId(perms.permissions[i]));
+        console.log(adminP)
         permissionss.push(adminP.Name)
+
     }
 
 
@@ -81,7 +91,7 @@ async function authenticate({
             jwtToken,
             refreshToken: refreshToken.token
         };
-    } else if (account.role_ids.includes("admin") === false) {
+    } else if (checkThat == false) {
         throw 'you are not admin';
     } else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
