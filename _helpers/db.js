@@ -13,7 +13,7 @@ module.exports = {
     Admin: require('../Admin/admin.model'),
     Student: require('../Student/student.model'),
     Teacher: require('../Teacher/teacher.model'),
-    Course: require('../Course/course.model'),
+    Course: require('../course/course.model'),
     per: require('../Permissions/permission.model'),
     Cms: require('../cms/cms.model'),
     role: require('../Roles/role.model'),
