@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
-// const authorize = require('_middleware/authorize')
+const authorize = require('_middleware/authorize')
 const Role = require('../_helpers/role');
 const roleService = require('./role.service')
 
@@ -33,6 +33,8 @@ function roleAdd(req, res, next) {
 
 
 function getAllRoles(req, res, next) {
+
+    console.log("roles get all in controller")
     roleService.getAllRoles()
         .then(accounts => res.json(accounts))
         .catch(next);
