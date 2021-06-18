@@ -499,7 +499,7 @@ async function sendVerificationEmail(account, origin) {
     await sendEmail({
         to: account.email,
         subject: 'Sign-up Verification API - Verify Email',
-        html: `<h4>Registration Email</h4>
+        html: `<h4>Verify Email</h4>
                <p>Thanks for registering!</p>`
     });
 }
