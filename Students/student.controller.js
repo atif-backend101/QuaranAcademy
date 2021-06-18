@@ -61,7 +61,7 @@ router.post('/register', registerSchema, register);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', getAll);
-router.get('/:id', authorize(), getById);
+router.get('/:id', getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', updateSchema, update);
 

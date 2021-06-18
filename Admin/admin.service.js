@@ -50,11 +50,13 @@ async function authenticate({
         email
     }).populate("roles");
 
-    // account.roles.filter(function (check) {
-    //     if (check.Name == "Admin") {
-    //         checkThat = true;
-    //     }
-    // });
+    console.log("account.role ", account.roles)
+
+    // if (account.roles.Name == "Admin") {
+
+    //     checkThat = true;
+
+    // };
 
     const perms = await db.Admin.findById(account.id);
 
@@ -67,7 +69,6 @@ async function authenticate({
         const adminP = await db.per.findById(ObjectId(perms.permissions[i]));
         console.log(adminP)
         permissionss.push(adminP.Name)
-
     }
 
 
@@ -91,10 +92,9 @@ async function authenticate({
             jwtToken,
             refreshToken: refreshToken.token
         };
-    } //else if (checkThat == false) {
-    //     throw 'you are not admin';
-    // } 
-    else { // authentication successful so generate jwt and refresh tokens
+    } else if (account.roles.Name !== "Admin") {
+        throw 'you are not admin';
+    } else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
