@@ -93,21 +93,22 @@ async function authenticate({
         };
     } //else if (checkThat == false) {
     //     throw 'you are not admin';
-    // } else { // authentication successful so generate jwt and refresh tokens
-    const jwtToken = generateJwtToken(account);
-    const refreshToken = generateRefreshToken(account, ipAddress);
-    // save refresh token
-    await refreshToken.save();
+    // } 
+    else { // authentication successful so generate jwt and refresh tokens
+        const jwtToken = generateJwtToken(account);
+        const refreshToken = generateRefreshToken(account, ipAddress);
+        // save refresh token
+        await refreshToken.save();
 
-    // return basic details and tokens
-    return {
-        // ...basicDetails(account),
-        account,
-        permissionss,
-        jwtToken,
-        refreshToken: refreshToken.token
-    };
-}
+        // return basic details and tokens
+        return {
+            // ...basicDetails(account),
+            account,
+            permissionss,
+            jwtToken,
+            refreshToken: refreshToken.token
+        };
+    }
 }
 
 
