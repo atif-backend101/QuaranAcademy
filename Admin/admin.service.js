@@ -50,11 +50,11 @@ async function authenticate({
         email
     }).populate("roles");
 
-    account.roles.filter(function (check) {
-        if (check.Name == "Admin") {
-            checkThat = true;
-        }
-    });
+    // account.roles.filter(function (check) {
+    //     if (check.Name == "Admin") {
+    //         checkThat = true;
+    //     }
+    // });
 
     const perms = await db.Admin.findById(account.id);
 
@@ -91,23 +91,23 @@ async function authenticate({
             jwtToken,
             refreshToken: refreshToken.token
         };
-    } else if (checkThat == false) {
-        throw 'you are not admin';
-    } else { // authentication successful so generate jwt and refresh tokens
-        const jwtToken = generateJwtToken(account);
-        const refreshToken = generateRefreshToken(account, ipAddress);
-        // save refresh token
-        await refreshToken.save();
+    } //else if (checkThat == false) {
+    //     throw 'you are not admin';
+    // } else { // authentication successful so generate jwt and refresh tokens
+    const jwtToken = generateJwtToken(account);
+    const refreshToken = generateRefreshToken(account, ipAddress);
+    // save refresh token
+    await refreshToken.save();
 
-        // return basic details and tokens
-        return {
-            // ...basicDetails(account),
-            account,
-            permissionss,
-            jwtToken,
-            refreshToken: refreshToken.token
-        };
-    }
+    // return basic details and tokens
+    return {
+        // ...basicDetails(account),
+        account,
+        permissionss,
+        jwtToken,
+        refreshToken: refreshToken.token
+    };
+}
 }
 
 
