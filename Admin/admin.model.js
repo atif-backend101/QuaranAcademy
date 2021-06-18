@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const Admin = new Schema({
 
-  roles: [{
+  roles: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Roles"
-  }],
+  },
   firstName: {
     type: String
   },

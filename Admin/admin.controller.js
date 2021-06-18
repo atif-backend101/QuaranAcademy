@@ -155,7 +155,7 @@ function registerSchema(req, res, next) {
     password: Joi.string().min(6).required(),
     social_provider: Joi.string(),
     permissions: Joi.array(),
-    roles: Joi.array().required()
+    roles: Joi.string().required()
     // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
     // acceptTerms: Joi.boolean().valid(true).required(),
   });
