@@ -196,7 +196,7 @@ async function resetPassword(params) {
 
 async function getAll() {
     const accounts = await db.Student.find();
-    return accounts.map(x => basicDetails(x));
+    return accounts;
 }
 
 async function getById(id) {
