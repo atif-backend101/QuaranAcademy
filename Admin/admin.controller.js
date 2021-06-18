@@ -23,6 +23,7 @@ router.get("/logout", (req, res) => {
 
 // In this route you can see that if the user is logged in u can acess his info in: req.user
 router.use('/students', authorize(), require('../Students/student.controller'));
+router.use('/teachers', authorize(), require('../Teachers/teacher.controller'));
 router.use('/roles', authorize(), require('../Roles/role.controller'))
 router.use('/class', authorize(), require('../Class/class.controller'));
 router.use('/course', authorize(), require('../course/course.controller'));
@@ -32,7 +33,6 @@ router.post("/authenticate", authenticateSchema, authenticate);
 router.post("/refresh-token", refreshToken);
 router.post("/revoke-token", authorize(), revokeTokenSchema, revokeToken);
 router.post("/register", registerSchema, register);
-
 router.post("/verify-email", verifyEmailSchema, verifyEmail);
 router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post("/forgot-password", forgotPasswordSchema, forgotPassword);
@@ -154,7 +154,7 @@ function registerSchema(req, res, next) {
     dob: Joi.string().required(),
     password: Joi.string().min(6).required(),
     social_provider: Joi.string(),
-    permissions: Joi.array().required(),
+    permissions: Joi.array(),
     roles: Joi.array().required()
     // confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
     // acceptTerms: Joi.boolean().valid(true).required(),

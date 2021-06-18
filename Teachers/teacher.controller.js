@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('../_middleware/validate-request');
+const validateRequest = require('_middleware/validate-request');
 const authorize = require('./authorize')
-const Role = require('../_helpers/role');
+const Role = require('_helpers/role');
 
-const studentService = require('./student.service')
+const teacherService = require('./teacher.service')
 
 
 const cookieSession = require('cookie-session')
+
 
 
 
@@ -27,15 +28,14 @@ router.use(cookieSession({
 
 
 // routes
-router.get("/", getAll);
-router.delete('/:id', _delete);
+// router.get('/', (req, res) => res.send('Example Home page!'))
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 
 
 router.get('/logout', (req, res) => {
     if (req.isAuthenticated()) {
         req.logOut()
-        return res.redirect('/student') // Handle valid logout
+        return res.redirect('/teacher') // Handle valid logout
     }
 
     return res.status(401) // Handle unauthenticated response
@@ -43,7 +43,6 @@ router.get('/logout', (req, res) => {
 
 
 
-// In this route you can see that if the user is logged in u can acess his info in: req.user
 
 
 
@@ -57,15 +56,13 @@ router.post('/register', registerSchema, register);
 
 
 
-
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', getAll);
-router.get('/:id', authorize(), getById);
+router.get('/:id', getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', updateSchema, update);
-
-
+router.delete('/:id', _delete);
 
 module.exports = router;
 
@@ -84,7 +81,7 @@ function authenticate(req, res, next) {
         password
     } = req.body;
     const ipAddress = req.ip;
-    studentService.authenticate({
+    teacherService.authenticate({
             email,
             password,
             ipAddress
@@ -102,7 +99,7 @@ function authenticate(req, res, next) {
 function refreshToken(req, res, next) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-    studentService.refreshToken({
+    teacherService.refreshToken({
             token,
             ipAddress
         })
@@ -139,7 +136,7 @@ function revokeToken(req, res, next) {
         });
     }
 
-    studentService.revokeToken({
+    teacherService.revokeToken({
             token,
             ipAddress
         })
@@ -152,7 +149,6 @@ function revokeToken(req, res, next) {
 function registerSchema(req, res, next) {
     console.log("validation se phle")
     const schema = Joi.object({
-        // role_ids: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         mobile: Joi.string().required(),
@@ -170,7 +166,7 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     console.log("api se phle")
-    studentService.register(req.body, req.get('origin'))
+    teacherService.register(req.body, req.get('origin'))
         .then(() => res.json({
             message: 'Registration successful',
 
@@ -178,12 +174,6 @@ function register(req, res, next) {
         .catch(next);
 
 }
-
-
-
-
-
-
 
 
 
@@ -196,7 +186,7 @@ function validateResetTokenSchema(req, res, next) {
 }
 
 function validateResetToken(req, res, next) {
-    studentService.validateResetToken(req.body)
+    teacherService.validateResetToken(req.body)
         .then(() => res.json({
             message: 'Token is valid'
         }))
@@ -213,7 +203,7 @@ function resetPasswordSchema(req, res, next) {
 }
 
 function resetPassword(req, res, next) {
-    studentService.resetPassword(req.body)
+    teacherService.resetPassword(req.body)
         .then(() => res.json({
             message: 'Password reset successful, you can now login'
         }))
@@ -221,7 +211,7 @@ function resetPassword(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    studentService.getAll()
+    teacherService.getAll()
         .then(accounts => res.json(accounts))
         .catch(next);
 }
@@ -234,7 +224,7 @@ function getById(req, res, next) {
         });
     }
 
-    studentService.getById(req.params.id)
+    teacherService.getById(req.params.id)
         .then(account => account ? res.json(account) : res.sendStatus(404))
         .catch(next);
 }
@@ -252,11 +242,11 @@ function getById(req, res, next) {
 //     validateRequest(req, next, schema);
 // }
 
-function create(req, res, next) {
-    studentService.create(req.body)
-        .then(account => res.json(account))
-        .catch(next);
-}
+// function create(req, res, next) {
+//     teacherService.create(req.body)
+//         .then(account => res.json(account))
+//         .catch(next);
+// }
 
 function updateSchema(req, res, next) {
     const schemaRules = {
@@ -268,7 +258,7 @@ function updateSchema(req, res, next) {
         confirmPassword: Joi.string().valid(Joi.ref('password')).empty('')
     };
 
-    // // only admins can update role
+    // only admins can update role
     // if (req.user.role === Role.Admin) {
     //     schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty('');
     // }
@@ -284,10 +274,9 @@ function update(req, res, next) {
     //         message: 'Unauthorized'
     //     });
     // }
+    // console.log("bearer===> ",req.headers.authorization);
 
-    // console.log("bearer===> ",req.headers.authorization)
-
-    studentService.update(req.params.id, req.body, req.headers.authorization)
+    teacherService.update(req.params.id, req.body, req.headers.authorization)
         .then(account => res.json(account))
         .catch(next);
 }
@@ -298,12 +287,20 @@ function update(req, res, next) {
 //     //     return res.status(401).json({ message: 'Unauthorized' });
 //     // }
 //     console.log("sss")
-//     studentService.delete(req.params.id)
+//     teacherService.delete(req.params.id)
 //         .then(() => res.json({
 //             message: 'Account deleted successfully'
 //         }))
 //         .catch(next);
 // }
+
+function _delete(req, res, next) {
+    teacherService.delete(req.params.id)
+        .then(() => res.json({
+            message: 'Teacher deleted successfully'
+        }))
+        .catch(next);
+}
 
 // helper functions
 
@@ -314,13 +311,4 @@ function setTokenCookie(res, token) {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     };
     res.cookie('refreshToken', token, cookieOptions);
-}
-
-
-function _delete(req, res, next) {
-    studentService.delete(req.params.id)
-        .then(() => res.json({
-            message: 'Student deleted successfully'
-        }))
-        .catch(next);
 }

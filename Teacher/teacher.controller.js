@@ -31,7 +31,7 @@ router.use(passport.initialize());
 router.use(passport.session());
 
 // routes
-router.get('/', (req, res) => res.send('Example Home page!'))
+// router.get('/', (req, res) => res.send('Example Home page!'))
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 
 
@@ -48,15 +48,16 @@ router.get('/logout', (req, res) => {
 
 // In this route you can see that if the user is logged in u can acess his info in: req.user
 router.get('/good', isLoggedIn_google, google)
-router.get('/fb-good', isLoggedIn_facebook,facebook)
+router.get('/fb-good', isLoggedIn_facebook, facebook)
 
 router.get("/auth/facebook", passport.authenticate("facebook"));
 router.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
-      successRedirect: "/teacher/fb-good",
-      failureRedirect: "/teacher/failed"
-    }),function (req, res) {
+        successRedirect: "/teacher/fb-good",
+        failureRedirect: "/teacher/failed"
+    }),
+    function (req, res) {
         // Successful authentication, redirect home.
 
         res.redirect('/teacher/fb-good');
@@ -90,7 +91,7 @@ router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
-router.get('/', authorize(Role.Admin), getAll);
+router.get('/', getAll);
 router.get('/:id', authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -226,7 +227,7 @@ function verifyEmail(req, res, next) {
 function verifyfpSchema(req, res, next) {
     const schema = Joi.object({
         otp: Joi.string().required()
-    }); 
+    });
     validateRequest(req, next, schema);
 }
 
@@ -351,7 +352,7 @@ function update(req, res, next) {
     // }
     // console.log("bearer===> ",req.headers.authorization);
 
-    teacherService.update(req.params.id, req.body,req.headers.authorization)
+    teacherService.update(req.params.id, req.body, req.headers.authorization)
         .then(account => res.json(account))
         .catch(next);
 }
@@ -418,7 +419,9 @@ function isLoggedIn_google(req, res, next) {
         // console.log("success req.user =======> ",req.user)
         console.log("logged in Google")
     } else {
-        res.status(401).json({message: "please sign in to continue"});
+        res.status(401).json({
+            message: "please sign in to continue"
+        });
 
         console.log("logged out Google")
     }
@@ -427,15 +430,17 @@ function isLoggedIn_google(req, res, next) {
 function isLoggedIn_facebook(req, res, next) {
     if (req.user) {
         next();
-        for(var x in req.user){
+        for (var x in req.user) {
             console.log(x)
-    }
+        }
         // console.log("success req.user =======> ",req.user)
         res.status(200)
         console.log("logged in Facebook")
     } else {
-        res.status(401).json({message: "please sign in to continue"});
-        console.log("req.user =======> ",req.user)
+        res.status(401).json({
+            message: "please sign in to continue"
+        });
+        console.log("req.user =======> ", req.user)
         console.log("logout out facebook")
     }
 
