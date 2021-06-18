@@ -36,7 +36,7 @@ const Student = new Schema({
   deleted_at: Date,
   status: {
     type: String,
-    default: "Inactive"
+    default: "Active"
   },
   social_provider: [{
     type: String,

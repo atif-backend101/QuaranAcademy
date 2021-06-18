@@ -51,8 +51,8 @@ async function authenticate({
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
     } //else if (account.role_ids.includes("admin") === false) {
-        //throw 'you are not admin';}
-         else { // authentication successful so generate jwt and refresh tokens
+    //throw 'you are not admin';}
+    else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
@@ -79,8 +79,8 @@ async function student_login({
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
     } //else if (account.role_ids.includes("student") === false) {
-        //throw 'you are not student';}
-         else { // authentication successful so generate jwt and refresh tokens
+    //throw 'you are not student';}
+    else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
@@ -107,8 +107,8 @@ async function teacher_login({
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
         throw 'Email or password is incorrect';
     } //else if (account.role_ids.includes("teacher") === false) {
-        //throw 'you are not teacher';}
-        else { // authentication successful so generate jwt and refresh tokens
+    //throw 'you are not teacher';}
+    else { // authentication successful so generate jwt and refresh tokens
         const jwtToken = generateJwtToken(account);
         const refreshToken = generateRefreshToken(account, ipAddress);
         // save refresh token
@@ -287,7 +287,7 @@ async function resetPassword(params) {
 
 async function getAll() {
     const accounts = await db.Teacher.find();
-    return accounts.map(x => basicDetails(x));
+    return accounts;
 }
 
 async function getById(id) {
@@ -315,11 +315,11 @@ async function create(params) {
     return basicDetails(account);
 }
 
-async function update(id, params,token) {
+async function update(id, params, token) {
     const account = await getAccount(id);
 
-    
-    if(account.jwtToken !== token ){
+
+    if (account.jwtToken !== token) {
         throw "you are not allowed"
     }
 
@@ -489,7 +489,8 @@ async function sendPasswordResetEmail(account, origin) {
 async function google(params, origin) {
 
     const googleUser = await db.Teacher.findOne({
-        provider_id: params.id, social_provider: "google"
+        provider_id: params.id,
+        social_provider: "google"
     });
 
     if (!googleUser) {
@@ -517,10 +518,11 @@ async function google(params, origin) {
 async function facebook(params, origin) {
 
     const facebookUser = await db.Teacher.findOne({
-        provider_id: params.id, social_provider: "facebook"
+        provider_id: params.id,
+        social_provider: "facebook"
     });
 
-    console.log("facebook user ======>",facebookUser)
+    console.log("facebook user ======>", facebookUser)
 
     if (!facebookUser) {
         console.log("User does not exist")

@@ -154,6 +154,7 @@ async function register(params, origin) {
 
     // hash password
     account.passwordHash = hash(params.password);
+    account.status = "Active"
 
     // save account
     await account.save();
