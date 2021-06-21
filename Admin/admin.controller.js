@@ -29,6 +29,7 @@ router.use('/class', authorize(), require('../Class/class.controller'));
 router.use('/course', authorize(), require('../course/course.controller'));
 router.use('/permission', authorize(), require('../Permissions/permission.controller'));
 router.use('/cms', authorize(), require('../cms/cms.controller'));
+router.use('/payment', authorize(), require('../Payment/payment.controller'));
 router.post("/authenticate", authenticateSchema, authenticate);
 router.post("/refresh-token", refreshToken);
 router.post("/revoke-token", authorize(), revokeTokenSchema, revokeToken);

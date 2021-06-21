@@ -19,6 +19,9 @@ function classAddSchema(req, res, next) {
   const schema = Joi.object({
     teacher: Joi.array().required(),
     course: Joi.string().required(),
+    discount: Joi.string().required(),
+    discount_unit: Joi.string().required(),
+    status: Joi.string().required(),
     time_slot: Joi.string().required(),
     days: Joi.string().required(),
     max_students: Joi.number().required(),
