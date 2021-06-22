@@ -10,6 +10,18 @@ const Class = new Schema({
     type: String,
     required: true
   },
+  discount: {
+    type: String,
+    required: false
+  },
+  discount_unit: {
+    type: String,
+    required: false
+  },
+  fee_status: {
+    type: String,
+    required: false
+  },
   max_students: {
     type: Number,
     required: true
@@ -47,18 +59,6 @@ const Class = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Teachers"
   }],
-  discount: {
-    type: String,
-    required: true
-  },
-  discount_unit: {
-    type: String,
-    required: true
-  },
-  status: {
-    type: String,
-    required: true
-  },
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course"

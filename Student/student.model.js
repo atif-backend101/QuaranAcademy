@@ -10,6 +10,10 @@ const Student = new Schema({
     type: String,
     default: "Student"
   },
+  fee_status: {
+    type: String,
+    default: "pending"
+  },
   firstName: {
     type: String
   },

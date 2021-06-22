@@ -128,6 +128,10 @@ async function addStudentsToClass(params) {
     // validate
     if (clas.students.length === clas.max_students) {
         throw "Class full. No student can be added";
+    } else if ((std.fee_status == "pending") && (params.fee_status == "pending")) {
+        throw "Student can't be enrolled"
+    } else if ((std.fee_status == "paid") && (params.fee_status == "pending") || (std.fee_status == "paid") && (params.fee_status == "paid")) {
+        throw "Student already enrolled"
     } else {
         // Object.assign(clas, params.students);
         if (clas.students.includes(params.students)) {
@@ -141,6 +145,7 @@ async function addStudentsToClass(params) {
         }
 
         clas.updated_at = Date.now();
+        std.fee_status = "paid";
 
         await clas.save();
         await std.save();

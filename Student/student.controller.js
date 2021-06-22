@@ -48,15 +48,16 @@ router.get('/logout', (req, res) => {
 
 // In this route you can see that if the user is logged in u can acess his info in: req.user
 router.get('/good', isLoggedIn_google, google)
-router.get('/fb-good', isLoggedIn_facebook,facebook)
+router.get('/fb-good', isLoggedIn_facebook, facebook)
 
 router.get("/auth/facebook", passport.authenticate("facebook"));
 router.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
-      successRedirect: "/student/fb-good",
-      failureRedirect: "/student/failed"
-    }),function (req, res) {
+        successRedirect: "/student/fb-good",
+        failureRedirect: "/student/failed"
+    }),
+    function (req, res) {
         // Successful authentication, redirect home.
 
         res.redirect('/student/fb-good');
@@ -225,7 +226,7 @@ function verifyEmail(req, res, next) {
 function verifyfpSchema(req, res, next) {
     const schema = Joi.object({
         otp: Joi.string().required()
-    }); 
+    });
     validateRequest(req, next, schema);
 }
 
@@ -402,7 +403,9 @@ function isLoggedIn_google(req, res, next) {
         // console.log("success req.user =======> ",req.user)
         console.log("logged in Google")
     } else {
-        res.status(401).json({message: "please sign in to continue"});
+        res.status(401).json({
+            message: "please sign in to continue"
+        });
 
         console.log("logged out Google")
     }
@@ -411,15 +414,17 @@ function isLoggedIn_google(req, res, next) {
 function isLoggedIn_facebook(req, res, next) {
     if (req.user) {
         next();
-        for(var x in req.user){
+        for (var x in req.user) {
             console.log(x)
-    }
+        }
         // console.log("success req.user =======> ",req.user)
         res.status(200)
         console.log("logged in Facebook")
     } else {
-        res.status(401).json({message: "please sign in to continue"});
-        console.log("req.user =======> ",req.user)
+        res.status(401).json({
+            message: "please sign in to continue"
+        });
+        console.log("req.user =======> ", req.user)
         console.log("logout out facebook")
     }
 
@@ -476,4 +481,3 @@ function student_login(req, res, next) {
         })
         .catch(next);
 }
-
