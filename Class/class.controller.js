@@ -6,6 +6,7 @@ const validateRequest = require("../_middleware/validate-request");
 const Role = require("../_helpers/role");
 const classService = require("./class.service");
 
+
 // routes
 router.get("/", getAllClasses);
 router.post("/add", classAddSchema, classAdd);
@@ -62,7 +63,9 @@ function addStudentsToClassSchema(req, res, next) {
 function addStudentsToClass(req, res, next) {
   classService
     .addStudentsToClass(req.body)
-    .then((accounts) => res.json(accounts))
+    .then((accounts) => res.json({
+      message: "Successfully Enrolled"
+    }))
     .catch(next);
 }
 

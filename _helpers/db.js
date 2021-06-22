@@ -16,6 +16,7 @@ module.exports = {
     Course: require('../course/course.model'),
     per: require('../Permissions/permission.model'),
     Cms: require('../cms/cms.model'),
+    Setting: require('../setting/setting.model'),
     Payment: require('../Payment/payment.model'),
     role: require('../Roles/role.model'),
     class: require('../Class/class.model'),
