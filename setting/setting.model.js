@@ -39,6 +39,14 @@ const Setting = new Schema({
         type: Date,
         default: Date.now
     },
+    logo: {
+        type: String,
+        required: true
+    },
+    // favicon: {
+    //     type: String,
+    //     required: true
+    // },
     updated_at: Date,
 });
 

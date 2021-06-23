@@ -41,29 +41,28 @@ async function getAccount(id) {
 }
 
 
-async function settingAdd(params, origin) {
+async function settingAdd(params, file) {
     // validate
-    if (await db.Setting.findOne({
-            company_name: params.company_name,
-            company_email: params.company_email,
-            company_phone: params.company_phone,
-            company_address: params.company_address,
-            facebook_url: params.facebook_url,
-            twitter_url: params.twitter_url,
-            youtube_url: params.youtube_url,
-            linkedin_url: params.linkedin_url
-        })) {
+    var x = true
+    const set = await getAll()
+    console.log("service set", set)
+    if (set.length > 0) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
-        throw "Cannot add same Setting twice.";
+        console.log("phle se aya hai")
+        x = false
+    } else if (set.length == 0) {
+        x = true
     }
 
-    // create permission object
-    const setting = new db.Setting(params);
+    // // create permission object
+    // const setting = new db.Setting(params);
 
 
-    // save account
-    await setting.save();
+    // // save account
+    // await setting.save();
+
+    return x
 
 
 
@@ -112,3 +111,44 @@ async function update(id, params) {
 
     return setting;
 }
+
+
+
+
+
+
+
+
+
+
+// router.post("/", upload.single('productImage'), (req, res, next) => {
+//     const product = new Product({
+//         _id: new mongoose.Types.ObjectId(),
+//         name: req.body.name,
+//         price: req.body.price,
+//         productImage: req.file.path
+//     });
+//     product
+//         .save()
+//         .then(result => {
+//             console.log(result);
+//             res.status(201).json({
+//                 message: "Created product successfully",
+//                 createdProduct: {
+//                     name: result.name,
+//                     price: result.price,
+//                     _id: result._id,
+//                     request: {
+//                         type: 'GET',
+//                         url: "http://localhost:3000/products/" + result._id
+//                     }
+//                 }
+//             });
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.status(500).json({
+//                 error: err
+//             });
+//         });
+// });
