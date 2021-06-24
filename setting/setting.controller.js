@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
     destination: function (req, file, cb) {
         console.log("storage definition")
-        cb(null, 'https://quran-server.herokuapp.com/uploads/');
+        cb(null, '/uploads/');
     },
     filename: function (req, file, cb) {
         console.log("filname definition")
