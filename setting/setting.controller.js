@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
     destination: function (req, file, cb) {
         console.log("storage definition")
-        cb(null, 'C:/Users/User/Downloads/zzz/uploads/');
+        cb(null, '../uploads/');
     },
     filename: function (req, file, cb) {
         console.log("filname definition")
@@ -128,58 +128,7 @@ function xxxxxxx() {
 router.post("/add",
     // console.log("upload.array se phle")
     upload.single('logo'), validate, (req, res, next) => {
-        // const zzz = validate(req, res, next)
 
-        // console.log
-        // const set =  db.Setting.find()
-        // console.log("hellooo", set)
-        // if (set.length == 1) {
-        //     throw {
-        //         message: "Already exist"
-        //     }
-        // }
-        // console.log("files to upload ===>", req.file)
-
-
-        // const settingProp = new db.Setting({
-        //     company_name: req.body.company_name,
-        //     company_email: req.body.company_email,
-        //     company_phone: req.body.company_phone,
-        //     company_address: req.body.company_address,
-        //     facebook_url: req.body.facebook_url,
-        //     twitter_url: req.body.twitter_url,
-        //     youtube_url: req.body.youtube_url,
-        //     linkedin_url: req.body.linkedin_url,
-        //     name: req.body.name,
-        //     price: req.body.price,
-        //     logo: req.file.path,
-        // })
-        // settingProp
-        //     .save()
-        //     .then(result => {
-        //         console.log(result);
-        //         res.status(201).json({
-        //             message: "Created settings successfully",
-        //             Settings: {
-        //                 company_name: result.company_name,
-        //                 company_email: result.company_email,
-        //                 company_phone: result.company_phone,
-        //                 company_address: result.company_address,
-        //                 facebook_url: result.facebook_url,
-        //                 twitter_url: result.twitter_url,
-        //                 youtube_url: result.youtube_url,
-        //                 linkedin_url: result.linkedin_url,
-        //                 logo: result.logo,
-
-        //             }
-        //         });
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         res.status(500).json({
-        //             error: err
-        //         });
-        //     });
     });
 
 

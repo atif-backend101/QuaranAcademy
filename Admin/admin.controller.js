@@ -44,7 +44,7 @@ router.post(
   validateResetToken
 );
 router.post("/reset-password", resetPasswordSchema, resetPassword);
-router.get("/", getAll);
+router.get("/", authorize(), getAll);
 router.get("/:id", authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put("/:id", authorize(), updateSchema, update);
