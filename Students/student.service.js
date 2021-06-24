@@ -196,7 +196,7 @@ async function resetPassword(params) {
 }
 
 async function getAll() {
-    const accounts = await db.Student.find();
+    const accounts = await db.Student.find().populate("class_ids");
     return accounts;
 }
 
