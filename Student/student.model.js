@@ -6,6 +6,10 @@ const Student = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Class"
   }],
+  course: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course"
+  }],
   role_ids: {
     type: String,
     default: "Student"
