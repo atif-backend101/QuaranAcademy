@@ -7,8 +7,7 @@ const Student = new Schema({
     ref: "Class"
   }],
   course: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Course"
+    type: String,
   }],
   role_ids: {
     type: String,

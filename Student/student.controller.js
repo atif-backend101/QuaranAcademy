@@ -351,8 +351,8 @@ function update(req, res, next) {
     // }
 
     // console.log("bearer===> ",req.headers.authorization)
-
-    studentService.update(req.params.id, req.body, req.headers.authorization)
+    console.log(req.user);
+    studentService.update(req.params.id, req.body, req.headers.authorization, req.user.id)
         .then(account => res.json(account))
         .catch(next);
 }

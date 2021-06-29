@@ -161,7 +161,8 @@ function registerSchema(req, res, next) {
         dob: Joi.string().required(),
         password: Joi.string().min(6).required(),
         social_provider: Joi.string(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        course: Joi.string()
     });
     validateRequest(req, next, schema);
     console.log("validation se bad")

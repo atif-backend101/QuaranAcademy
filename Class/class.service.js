@@ -78,7 +78,7 @@ async function classAdd(params, origin) {
 
 async function getClass(id) {
     if (!db.isValidId(id)) throw 'Class not found';
-    const clas = await db.class.findById(id);
+    const clas = await db.class.findById(id).populate("course");
     if (!clas) throw 'No class found';
     return clas;
 }
@@ -124,24 +124,33 @@ async function addStudentsToClass(params) {
     const std = await db.Student.findById(params.students);
 
     const clas = await getClass(params.id);
+    console.log(clas.course.Title);
     // console.log("is k andar aa", clas);
     // validate
     if (clas.students.length === clas.max_students) {
         throw "Class full. No student can be added";
-    } else if ((std.fee_status == "pending") && (params.fee_status == "pending")) {
-        throw "Student can't be enrolled"
-    } else if ((std.fee_status == "paid") && (params.fee_status == "pending") || (std.fee_status == "paid") && (params.fee_status == "paid")) {
-        throw "Student already enrolled"
-    } else {
+    }
+    // else if ((std.fee_status == "pending") && (params.fee_status == "pending")) {
+    //     throw "Student can't be enrolled"
+    // } else if ((std.fee_status == "paid") && (params.fee_status == "pending") || (std.fee_status == "paid") && (params.fee_status == "paid")) {
+    //     throw "Student already enrolled"
+    // } 
+    else {
         // Object.assign(clas, params.students);
         if (clas.students.includes(params.students)) {
-            throw "student already enrolled"
+            throw "Student already enrolled"
         }
         clas.students.push(params.students)
         if (std.class_ids.includes(clas.id)) {
             throw "student already enrolled"
         } else {
             std.class_ids.push(clas.id);
+            if (std.course.includes(clas.course.Title)) {
+                console.log("course already exist");
+            } else {
+                std.course.push(clas.course.Title);
+            }
+            // std.course.push(clas.course.Title);
         }
 
         clas.updated_at = Date.now();

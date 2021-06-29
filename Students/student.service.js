@@ -6,7 +6,8 @@ const crypto = require("crypto");
 const sendEmail = require('../_helpers/send-email');
 const db = require('../_helpers/db');
 const {
-    error
+    error,
+    Console
 } = require('console');
 
 
@@ -202,6 +203,45 @@ async function getAll() {
             path: 'course'
         }
     });
+
+
+    // accounts.forEach(myFunction);
+
+    // function myFunction(item, index) {
+    //     console.log("asdf", item.class_ids[index].course.Title);
+    // }
+
+    // accounts.forEach(function (arrayItem) {
+    //     let x = arrayItem.class_ids.course;
+    //     x.forEach(function (arrayItem1) {
+    //         console.log("yeh lo", arrayItem1);
+    //     });
+    // });
+
+
+
+
+    // let coursesofStudents = []
+    // for (i in accounts) {
+    //     //     console.log(i)
+
+    //     //     let x = accounts[i].class_ids[i].course
+    //     console.log("xxxxxxxxxxx", accounts[i].class_ids[i].course)
+    //     //     // // coursesofStudents.push(accounts[i].class_ids[i].course.Title)
+    //     //     // if (coursesofStudents.includes(accounts[i].class_ids[i].course.Title)) {
+    //     //     //     // coursesofStudents.push(accounts[i].class_ids[i].course.Title)
+    //     //     //     console.log("parha wa hai")
+    //     //     // } else {
+    //     //     //     console.log("nahi poarha wa")
+    //     //     //     // coursesofStudents.push(accounts[i].class_ids[j].course.Title)
+    //     //     // }
+    // }
+
+
+
+    // console.log("1==>", coursesofStudents)
+
+
     return accounts;
 }
 

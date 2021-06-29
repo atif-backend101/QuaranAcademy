@@ -289,12 +289,11 @@ async function create(params) {
     return basicDetails(account);
 }
 
-async function update(id, params, token) {
+async function update(id, params, token, userID) {
     const account = await getAccount(id);
 
-    if (account.jwtToken !== token) {
-        console.log("token ===> ", token)
-        throw "you are not allowed"
+    if (userID !== id) {
+        throw "you are not allowed to edit anyone else's account"
     }
 
     // validate (if email was changed)
@@ -313,7 +312,6 @@ async function update(id, params, token) {
     Object.assign(account, params);
     account.updated_at = Date.now();
     await account.save();
-
     return basicDetails(account);
 }
 
