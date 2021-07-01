@@ -83,13 +83,10 @@ async function getAttendance(id) {
         time.push({
 
             student_id: attendance[i].std_id.id,
-
-            [attendance[i].date]: {
-                time: attendance[i].time_stamp,
-                student: attendance[i].std_id.firstName,
-                status: attendance[i].status,
-            }
-
+            date: attendance[i].date,
+            student: attendance[i].std_id.firstName,
+            status: attendance[i].status,
+            time: attendance[i].time_stamp,
 
         });
     };

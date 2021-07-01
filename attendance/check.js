@@ -1,8 +1,8 @@
 [{
     'id': 'dasadsads',
-    'attendance': [{
+    'attendance': {
         'student_1': [{
-            date: '17-06-2021': {
+            '17-06-2021': {
                 'name': 'Khurram',
                 'attendance_status': 'present',
                 'timestamp': timestamp
@@ -20,7 +20,7 @@
                 'timestamp': timestamp
             }
         }],
-    }]
+    }
 }]
 
 
