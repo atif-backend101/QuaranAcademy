@@ -58,6 +58,12 @@ async function attendanceAdd(params, origin) {
         throw "Cannot add same Attendance twice.";
     }
 
+    const checkClass = await db.class.findOne({
+        students: params.std_id
+    })
+
+    if (!checkClass) throw 'Not in class';
+
     // create permission object
     const attendance = new db.Attendance(params);
 
