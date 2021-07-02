@@ -58,7 +58,7 @@ async function attendanceAdd(params, origin) {
         // return await sendAlreadyRegisteredEmail(params.email, origin);
         attRec.status = params.status;
         attRec.updated_at = Date.now();
-        await attRec.save();
+        // await attRec.save();
     }
 
     const checkClass = await db.class.findOne({
