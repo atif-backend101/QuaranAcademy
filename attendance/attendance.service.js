@@ -55,14 +55,21 @@ async function attendanceAdd(params, origin) {
         })) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
-        throw "Cannot add same Attendance twice.";
+        throw "Cannot add Attendance twice for same day.";
     }
 
     const checkClass = await db.class.findOne({
+        _id: params.class_id
+    })
+
+    if (!checkClass) throw 'No Class Exist';
+
+    const checkStudent = await db.class.findOne({
+        _id: params.class_id,
         students: params.std_id
     })
 
-    if (!checkClass) throw 'Not in class';
+    if (!checkStudent) throw 'Student is not enrolled in this class';
 
     // create permission object
     const attendance = new db.Attendance(params);

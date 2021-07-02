@@ -22,7 +22,7 @@ function attendanceAddSchema(req, res, next) {
         date: Joi.string().required(),
         class_id: Joi.string().required(),
         std_id: Joi.string().required(),
-        teacher_id: Joi.string().required(),
+        // teacher_id: Joi.string().required(),
         status: Joi.string().required()
     });
     validateRequest(req, next, schema);

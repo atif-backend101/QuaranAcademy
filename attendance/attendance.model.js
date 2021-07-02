@@ -18,10 +18,10 @@ const attendanceMaster = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Students"
     },
-    teacher_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Teachers"
-    },
+    // teacher_id: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Teachers"
+    // },
     status: {
         type: String,
         required: true
