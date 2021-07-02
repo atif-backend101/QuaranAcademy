@@ -47,15 +47,18 @@ async function getAccount(id) {
 
 
 async function attendanceAdd(params, origin) {
+    const attRec = await db.Attendance.findOne({
+        date: params.date,
+        class_id: params.class_id,
+        std_id: params.std_id
+    })
     // validate
-    if (await db.Attendance.findOne({
-            date: params.date,
-            class_id: params.class_id,
-            std_id: params.std_id
-        })) {
+    if (attRec) {
         // send already registered error in email to prevent account enumeration
         // return await sendAlreadyRegisteredEmail(params.email, origin);
-        throw "Cannot add Attendance twice for same day.";
+        attRec.status = params.status;
+        attRec.updated_at = Date.now();
+        await attRec.save();
     }
 
     const checkClass = await db.class.findOne({
