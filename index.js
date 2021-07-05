@@ -31,9 +31,9 @@ app.use('/admin', require('./Admin/admin.controller'));
 app.use('/student', require('./Student/student.controller'));
 app.use('/teacher', require('./Teacher/teacher.controller'));
 // app.use('/permission', require('./Permissions/permission.controller'));
-// app.use('/cms', require('./cms/cms.controller'));
+app.use('/cms', require('./cms/cms.controller'));
 // app.use('/roles', require('./Roles/role.controller'));
-// app.use('/class', require('./Class/class.controller'));
+app.use('/class', require('./Class/class.controller'));
 app.use('/course', require('./course/course.controller'));
 
 // swagger docs route

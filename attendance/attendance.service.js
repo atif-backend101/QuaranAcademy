@@ -96,12 +96,11 @@ async function getAttendance(id) {
     var time = [];
     // return
     for (i = 0; i < attendance.length; i++) {
-        var lastName = attendance[i].std_id.lastName
         time.push({
 
             student_id: attendance[i].std_id.id,
             date: attendance[i].date,
-            student: `${attendance[i].std_id.firstName} ${lastName}`,
+            student: `${attendance[i].std_id.firstName} ${attendance[i].std_id.lastName}`,
             status: attendance[i].status,
             time: attendance[i].time_stamp,
 
