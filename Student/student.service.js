@@ -37,6 +37,7 @@ module.exports = {
     google,
     facebook,
     student_login,
+    getStudentClassById
 };
 
 async function authenticate({
@@ -516,4 +517,20 @@ async function facebook(params, origin) {
         throw "some error"
     }
 
+}
+
+
+async function getStudentClassById(id, user) {
+    if(id != user.id)
+    {
+        throw 'You are not allowed!'
+    }
+    if (!db.isValidId(id)) throw 'Account not found';
+    const student_class = await db.class.find({
+        students: id
+    });
+    if (!student_class) throw 'Not found';
+
+
+    return student_class;
 }

@@ -32,6 +32,7 @@ router.use(passport.session());
 
 // routes
 router.get("/", getAll);
+router.get('/class/:id',authorize(), getStudentClassById);
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 
 
@@ -481,3 +482,11 @@ function student_login(req, res, next) {
         })
         .catch(next);
 }
+
+
+function getStudentClassById(req, res, next) {
+    console.log(req.user)
+    studentService.getStudentClassById(req.params.id, req.user)
+        .then(accounts => res.json(accounts))
+        .catch(next);
+  }
