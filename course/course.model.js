@@ -7,6 +7,18 @@ const Course = new Schema({
         type: String,
         required: true
     },
+    Description: {
+        type: String,
+        required: true
+    },
+    Certifications: {
+        type: String,
+        required: true
+    },
+    Outcomes: {
+        type: String,
+        required: true
+    },
     created_at: {
         type: Date,
         default: Date.now

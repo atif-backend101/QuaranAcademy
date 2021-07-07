@@ -294,7 +294,7 @@ async function update(id, params, token, userID) {
     const account = await getAccount(id);
 
     if (userID !== id) {
-        throw "you are not allowed to edit anyone else's account"
+        throw "You are not allowed to edit anyone else's account"
     }
 
     // validate (if email was changed)

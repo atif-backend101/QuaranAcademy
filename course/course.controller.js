@@ -18,7 +18,10 @@ module.exports = router;
 
 function courseAddSchema(req, res, next) {
     const schema = Joi.object({
-        Title: Joi.string().required()
+        Title: Joi.string().required(),
+        Description: Joi.string().required(),
+        Certifications: Joi.string().required(),
+        Outcomes: Joi.string().required()
     });
     validateRequest(req, next, schema);
 }
