@@ -82,7 +82,7 @@ router.get('/google/callback', passport.authenticate('google', {
     function (req, res) {
         // Successful authentication, redirect home.
 
-        res.redirect('https://quran-server.herokuapp.com/student/good');
+        res.redirect('/student/good');
     }
 );
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
