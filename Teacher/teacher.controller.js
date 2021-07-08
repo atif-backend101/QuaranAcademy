@@ -9,7 +9,7 @@ const teacherService = require('./teacher.service')
 
 const passport = require('passport');
 const cookieSession = require('cookie-session')
-require('./passport-google-setup');
+require('./passport-google-teacher-setup');
 require('./passport-fb-setup');
 
 // const passport = require ("passport");

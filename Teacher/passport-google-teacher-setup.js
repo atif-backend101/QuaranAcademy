@@ -1,5 +1,5 @@
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy2 = require('passport-google-oauth20').Strategy;
 
 passport.serializeUser(function(user, done) {
     /*
@@ -19,10 +19,10 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-passport.use(new GoogleStrategy({
+passport.use(new GoogleStrategy2({
     clientID: "862532654552-7h3uh5s7nmu753e1tb01fcpq1707l5ni.apps.googleusercontent.com",
     clientSecret: "ZdqCL2ZummEp__LnJWmK85qh",
-    callbackURL: "https://quran-server.herokuapp.com/teacher/auth/google/callback"
+    callbackURL: "http://localhost:3005/teacher/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     /*
