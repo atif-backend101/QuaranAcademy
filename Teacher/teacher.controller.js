@@ -501,3 +501,6 @@ function teacher_login(req, res, next) {
         })
         .catch(next);
 }
+
+
+//asd

@@ -34,3 +34,6 @@ passport.use('jwt-1', new GoogleStrategy({
     return done(null, profile);
   }
 ));
+
+
+//asd
