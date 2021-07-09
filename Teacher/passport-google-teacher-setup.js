@@ -19,7 +19,7 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-passport.use(new GoogleStrategy2({
+passport.use('jwt-2', new GoogleStrategy2({
     clientID: "862532654552-7h3uh5s7nmu753e1tb01fcpq1707l5ni.apps.googleusercontent.com",
     clientSecret: "ZdqCL2ZummEp__LnJWmK85qh",
     callbackURL: "http://localhost:3005/teacher/google/callback"

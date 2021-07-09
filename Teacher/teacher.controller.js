@@ -71,13 +71,13 @@ router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
 // router.post('/facebook',  facebook);
-router.get('/google', passport.authenticate('google', {
+router.get('/google', passport.authenticate('jwt-2', {
     scope: ['profile', 'email']
 }), (req, res) => {
     console.log("from gmail ==================> ")
 });
 // router.post('/google', (req, res) => res.send('user/google ====> working'))
-router.get('/google/callback', passport.authenticate('google', {
+router.get('/google/callback', passport.authenticate('jwt-2', {
         failureRedirect: 'teacher/failed'
     }),
     function (req, res) {
