@@ -471,7 +471,6 @@ async function google(params, origin) {
         account.status = "active";
         account.provider_id = params.id;
         account.firstName = params.displayName;
-        const jwtToken = generateJwtToken(account);
         account.social_provider = params.provider
         await account.save();
         // console.log("==========> ", account)
@@ -480,6 +479,7 @@ async function google(params, origin) {
         // console.log("==========> found")
         // console.log(googleUser)
         // console.log("already saved....")
+        const jwtToken = generateJwtToken(account);
         return {googleUser,jwtToken};
     } else {
         throw "some error"
