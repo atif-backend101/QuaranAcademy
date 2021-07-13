@@ -476,8 +476,8 @@ async function google(params, origin) {
         // console.log("==========> ", account)
         const jwtToken = generateJwtToken(googleUser);
         return {
-            student: googleUser,
-            jwt: jwtToken
+            account: googleUser,
+            jwtToken: jwtToken
         };
     } else if (googleUser) {
         // console.log("==========> found")
@@ -485,8 +485,8 @@ async function google(params, origin) {
         // console.log("already saved....")
         const jwtToken = generateJwtToken(googleUser);
         return {
-            student: googleUser,
-            jwt: jwtToken
+            account: googleUser,
+            jwtToken: jwtToken
         };
     } else {
         throw "some error"
