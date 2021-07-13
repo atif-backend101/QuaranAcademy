@@ -479,7 +479,7 @@ async function google(params, origin) {
         // console.log("==========> found")
         // console.log(googleUser)
         // console.log("already saved....")
-        const jwtToken = generateJwtToken(account);
+        const jwtToken = generateJwtToken();
         return {googleUser,jwtToken};
     } else {
         throw "some error"
