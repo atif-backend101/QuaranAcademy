@@ -460,7 +460,7 @@ async function sendPasswordResetEmail(account, origin) {
 
 async function google(params, origin) {
     console.log("dsadasdasdasdasdasdasda",params)
-    console.log("Naam yeh",params.name);
+    // console.log("Naam yeh",params.name);
     const googleUser = await db.Student.findOne({
         provider_id: params.googleId,
         social_provider: "google"
@@ -468,8 +468,8 @@ async function google(params, origin) {
 
     if (!googleUser) {
 
-        console.log("User does not exist");
-        console.log("Naam yeh",params.name);
+        // console.log("User does not exist");
+        // console.log("Naam yeh",params.name);
         const account = new db.Student();
         account.status = "active";
         account.provider_id = params.googleId;
