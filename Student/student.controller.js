@@ -85,6 +85,7 @@ router.get('/google/callback', passport.authenticate('jwt-1', {
         res.redirect('/student/good');
     }
 );
+router.post('/google2', googleTest);
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
@@ -491,4 +492,13 @@ function getStudentClassById(req, res, next) {
         .catch(next);
   }
 
+  function googleTest(req, res, next) {
+    studentService.google(req.user, req.get('origin'))
+    .then(({
+        ...googleUser
+    }) => {
+        res.json(googleUser);
+    })
+    .catch(next);
+  }
   //asd
