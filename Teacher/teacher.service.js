@@ -509,7 +509,7 @@ async function google(params, origin) {
         // console.log("==========> ", account)
         const jwtToken = generateJwtToken(googleUser);
         return {
-            std: googleUser,
+            teacher: googleUser,
             jwt: jwtToken
         };
     } else if (googleUser) {
@@ -518,7 +518,7 @@ async function google(params, origin) {
         // console.log("already saved....")
         const jwtToken = generateJwtToken(googleUser);
         return {
-            std: googleUser,
+            teacher: googleUser,
             jwt: jwtToken
         };
     } else {
