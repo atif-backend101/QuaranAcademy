@@ -493,6 +493,7 @@ function getStudentClassById(req, res, next) {
   }
 
   function googleTest(req, res, next) {
+      console.log("Req dekh", req.body);
     studentService.google(req.body, req.get('origin'))
     .then(({
         ...googleUser
