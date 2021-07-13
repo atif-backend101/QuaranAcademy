@@ -479,7 +479,11 @@ async function google(params, origin) {
         // console.log("==========> found")
         // console.log(googleUser)
         // console.log("already saved....")
-        return googleUser;
+        const jwtToken = generateJwtToken(googleUser);
+        return {
+            std: googleUser,
+            jwt: jwtToken
+        };
     } else {
         throw "some error"
     }
@@ -521,8 +525,7 @@ async function facebook(params, origin) {
 
 
 async function getStudentClassById(id, user) {
-    if(id != user.id)
-    {
+    if (id != user.id) {
         throw 'You are not allowed!'
     }
     if (!db.isValidId(id)) throw 'Account not found';
