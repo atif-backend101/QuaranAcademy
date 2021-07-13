@@ -466,6 +466,7 @@ async function google(params, origin) {
     });
 
     if (!googleUser) {
+        console.log("dsadasdasdasdasdasdasda",params)
         console.log("User does not exist");
         console.log("Naam yeh",params.name);
         const account = new db.Student();
