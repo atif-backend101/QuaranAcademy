@@ -351,6 +351,8 @@ function hash(password) {
 }
 
 function generateJwtToken(account) {
+    console.log("account dekho generate jwtToken mai", account);
+
     // create a jwt token containing the account id that expires in 15 minutes
     return jwt.sign({
         sub: account.id,
@@ -515,7 +517,7 @@ async function facebook(params, origin) {
         account.firstName = params.name;
         account.social_provider = params.providerName;
         account.image = params.imageUrl
-        console.log("account dekho", account);
+        // console.log("account dekho", account);
         await account.save();
         const jwtToken = generateJwtToken(facebookUser);
         return {
