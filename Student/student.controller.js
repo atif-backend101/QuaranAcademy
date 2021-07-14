@@ -86,6 +86,7 @@ router.get('/google/callback', passport.authenticate('jwt-1', {
     }
 );
 router.post('/google2', googleTest);
+router.post('/facebook2', facebookTest);
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password-otp', verifyfpSchema, verifyfp);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
@@ -503,3 +504,14 @@ function getStudentClassById(req, res, next) {
     .catch(next);
   }
   
+  
+  function facebookTest(req, res, next) {
+    console.log("Req dekh facebook", req.user);
+  studentService.facebook(req.body, req.get('origin'))
+  .then(({
+      ...facebookUser
+  }) => {
+      res.json(facebookUser);
+  })
+  .catch(next);
+}

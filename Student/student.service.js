@@ -501,7 +501,7 @@ async function google(params, origin) {
 async function facebook(params, origin) {
 
     const facebookUser = await db.Student.findOne({
-        provider_id: params.id,
+        provider_id: params.facebookId,
         social_provider: "facebook"
     });
 
@@ -511,19 +511,24 @@ async function facebook(params, origin) {
         console.log("User does not exist")
         const account = new db.Student();
         account.status = "active";
-        account.provider_id = params.id;
-        account.firstName = params._json.first_name;
-        account.lastName = params._json.last_name;
-        account.social_provider = params.provider
+        account.provider_id = params.userID;
+        account.name = params.name;
+        account.social_provider = params.providerName;
+        account.image = params.imageUrl
         await account.save();
-        // console.log("==========> ", account)
-        return account;
+        const jwtToken = generateJwtToken(facebookUser);
+        return {
+            account: facebookUser,
+            jwtToken: jwtToken
+        };
     } else if (facebookUser) {
-        // console.log("==========> found")
-        // console.log(googleUser)
-        // console.log("already saved....")
 
-        return facebookUser;
+
+        const jwtToken = generateJwtToken(facebookUser);
+        return {
+            account: facebookUser,
+            jwtToken: jwtToken
+        };
     } else {
         throw "some error"
     }
