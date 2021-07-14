@@ -479,9 +479,9 @@ async function google(params, origin) {
         account.social_provider = "google";
         await account.save();
         // console.log("==========> ", account)
-        const jwtToken = generateJwtToken(googleUser);
+        const jwtToken = generateJwtToken(account);
         return {
-            account: googleUser,
+            account: account,
             jwtToken: jwtToken
         };
     } else if (googleUser) {
