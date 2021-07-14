@@ -506,7 +506,7 @@ function googleTest(req, res, next) {
 
 
 function facebookTest(req, res, next) {
-    console.log("Req dekh facebook", req.user);
+    // console.log("Req dekh facebook", req.user);
     studentService.facebook(req.body, req.get('origin'))
         .then(({
             ...facebookUser

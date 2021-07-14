@@ -356,7 +356,7 @@ function generateJwtToken(account) {
         sub: account.id,
         id: account.id
     }, config.secret, {
-        expiresIn: '15m'
+        expiresIn: '1440m'
     });
 }
 
@@ -499,13 +499,13 @@ async function google(params, origin) {
 
 
 async function facebook(params, origin) {
-    console.log("dsadasdasdasdasdasdasda",params)
+    // console.log("dsadasdasdasdasdasdasda",params)
     const facebookUser = await db.Student.findOne({
         provider_id: params.facebookId,
         social_provider: "facebook"
     });
 
-    console.log("facebook user ======>", facebookUser)
+    // console.log("facebook user ======>", facebookUser)
 
     if (!facebookUser) {
         console.log("User does not exist")
@@ -515,6 +515,7 @@ async function facebook(params, origin) {
         account.firstName = params.name;
         account.social_provider = params.providerName;
         account.image = params.imageUrl
+        console.log("account dekho", account);
         await account.save();
         const jwtToken = generateJwtToken(facebookUser);
         return {
