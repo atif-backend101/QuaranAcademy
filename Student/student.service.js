@@ -519,9 +519,9 @@ async function facebook(params, origin) {
         account.image = params.imageUrl
         // console.log("account dekho", account);
         await account.save();
-        const jwtToken = generateJwtToken(facebookUser);
+        const jwtToken = generateJwtToken(account);
         return {
-            account: facebookUser,
+            account: account,
             jwtToken: jwtToken
         };
     } else if (facebookUser) {
