@@ -503,7 +503,7 @@ async function google(params, origin) {
 async function facebook(params, origin) {
     // console.log("dsadasdasdasdasdasdasda",params)
     const facebookUser = await db.Student.findOne({
-        provider_id: params.facebookId,
+        provider_id: params.userID,
         social_provider: "facebook"
     });
 
