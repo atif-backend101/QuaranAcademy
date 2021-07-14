@@ -512,7 +512,7 @@ async function facebook(params, origin) {
         const account = new db.Student();
         account.status = "active";
         account.provider_id = params.userID;
-        account.name = params.name;
+        account.firstName = params.name;
         account.social_provider = params.providerName;
         account.image = params.imageUrl
         await account.save();
