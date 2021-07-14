@@ -32,7 +32,7 @@ router.use(passport.session());
 
 // routes
 router.get("/", getAll);
-router.get('/class/:id',authorize(), getStudentClassById);
+router.get('/class/:id', authorize(), getStudentClassById);
 router.get('/failed', (req, res) => res.send('You Failed to log in!'))
 
 
@@ -491,27 +491,27 @@ function getStudentClassById(req, res, next) {
     studentService.getStudentClassById(req.params.id, req.user)
         .then(accounts => res.json(accounts))
         .catch(next);
-  }
+}
 
-  function googleTest(req, res, next) {
-      console.log("Req dekh", req.user);
+function googleTest(req, res, next) {
+    console.log("Req dekh", req.user);
     studentService.google(req.body, req.get('origin'))
-    .then(({
-        ...googleUser
-    }) => {
-        res.json(googleUser);
-    })
-    .catch(next);
-  }
-  
-  
-  function facebookTest(req, res, next) {
+        .then(({
+            ...googleUser
+        }) => {
+            res.json(googleUser);
+        })
+        .catch(next);
+}
+
+
+function facebookTest(req, res, next) {
     console.log("Req dekh facebook", req.user);
-  studentService.facebook(req.body, req.get('origin'))
-  .then(({
-      ...facebookUser
-  }) => {
-      res.json(facebookUser);
-  })
-  .catch(next);
+    studentService.facebook(req.body, req.get('origin'))
+        .then(({
+            ...facebookUser
+        }) => {
+            res.json(facebookUser);
+        })
+        .catch(next);
 }
