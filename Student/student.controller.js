@@ -96,7 +96,7 @@ router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
-router.get('/attendance/count/all/:id', studentAttendaceAll);
+router.get('/attendance/count/all/:id', authorize(), studentAttendaceAll);
 
 
 module.exports = router;

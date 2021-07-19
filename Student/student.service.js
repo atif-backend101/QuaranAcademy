@@ -583,7 +583,20 @@ async function getStudentClassById(id, user) {
 //     };
 // }
 
-async function studentAttendaceAll(id) {
+async function studentAttendaceAll(id, user) {
+    if (id != user.id) {
+        throw "You are not allowed!";
+      }
+  const student_class = await db.class
+    .find({
+      students: id,
+    })
+    .populate("course")
+    .populate("teacher");
+  if (!student_class) throw "Not found";
+
+  //   return student_class;
+
   if (!db.isValidId(id)) throw "Account not found";
   const attendance = await db.Attendance.find({
     std_id: id,
@@ -600,7 +613,7 @@ async function studentAttendaceAll(id) {
       student: `${attendance[i].std_id.firstName} ${attendance[i].std_id.lastName}`,
       date: attendance[i].date,
       status: attendance[i].status,
-      time: attendance[i].time_stamp
+      time: attendance[i].time_stamp,
     });
   }
 
@@ -624,13 +637,17 @@ async function studentAttendaceAll(id) {
         counterAb++;
       }
     }
-    TotalAttendance[i].push({ "Total Present": counterPr, "Total Absent": counterAb });
+    TotalAttendance[i].push({
+      "Total Present": counterPr,
+      "Total Absent": counterAb,
+    });
 
     counterPr = 0;
     counterAb = 0;
   }
 
   return {
-    TotalAttendance,
+    AllClasses: student_class,
+    TotalAttendance: TotalAttendance,
   };
 }
