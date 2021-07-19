@@ -584,9 +584,9 @@ async function getStudentClassById(id, user) {
 // }
 
 async function studentAttendaceAll(id, user) {
-    if (id != user.id) {
-        throw "You are not allowed!";
-      }
+  if (id != user.id) {
+    throw "You are not allowed!";
+  }
   const student_class = await db.class
     .find({
       students: id,
@@ -644,6 +644,7 @@ async function studentAttendaceAll(id, user) {
 
     counterPr = 0;
     counterAb = 0;
+    
   }
 
   return {
