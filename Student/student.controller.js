@@ -96,6 +96,7 @@ router.get('/', authorize(), getAll);
 router.get('/:id', authorize(), getById);
 // router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
+router.get('/attendance/count/all/:id', studentAttendaceAll);
 
 
 module.exports = router;
@@ -513,5 +514,13 @@ function facebookTest(req, res, next) {
         }) => {
             res.json(facebookUser);
         })
+        .catch(next);
+}
+
+
+function studentAttendaceAll(req, res, next) {
+    console.log(req.user)
+    studentService.studentAttendaceAll(req.params.id, req.user)
+        .then(accounts => res.json(accounts))
         .catch(next);
 }
