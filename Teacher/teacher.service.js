@@ -492,70 +492,72 @@ async function sendPasswordResetEmail(account, origin) {
 
 
 async function google(params, origin) {
-
+    console.log("dsadasdasdasdasdasdasda", params);
+    // console.log("Naam yeh",params.name);
     const googleUser = await db.Teacher.findOne({
-        provider_id: params.id,
-        social_provider: "google"
+      provider_id: params.googleId,
+      social_provider: "google",
     });
-
+  
     if (!googleUser) {
-        console.log("User does not exist")
-        const account = new db.Teacher();
-        account.status = "active";
-        account.provider_id = params.id;
-        account.firstName = params.displayName;
-        account.social_provider = params.provider
-        await account.save();
-        // console.log("==========> ", account)
-        const jwtToken = generateJwtToken(googleUser);
-        return {
-            teacher: googleUser,
-            jwt: jwtToken
-        };
+      // console.log("User does not exist");
+      // console.log("Naam yeh",params.name);
+      const account = new db.Teacher();
+      account.provider_id = params.googleId;
+      account.firstName = params.name;
+      account.social_provider = "google";
+      await account.save();
+      // console.log("==========> ", account)
+      const jwtToken = generateJwtToken(account);
+      return {
+        account: account,
+        jwtToken: jwtToken,
+      };
     } else if (googleUser) {
-        // console.log("==========> found")
-        // console.log(googleUser)
-        // console.log("already saved....")
-        const jwtToken = generateJwtToken(googleUser);
-        return {
-            teacher: googleUser,
-            jwt: jwtToken
-        };
+      // console.log("==========> found")
+      // console.log(googleUser)
+      // console.log("already saved....")
+      const jwtToken = generateJwtToken(googleUser);
+      return {
+        account: googleUser,
+        jwtToken: jwtToken,
+      };
     } else {
-        throw "some error"
+      throw "some error";
     }
+  }
 
-}
 
-
-async function facebook(params, origin) {
-
+  async function facebook(params, origin) {
+    // console.log("dsadasdasdasdasdasdasda",params)
     const facebookUser = await db.Teacher.findOne({
-        provider_id: params.id,
-        social_provider: "facebook"
+      provider_id: params.userID,
+      social_provider: "facebook",
     });
-
-    console.log("facebook user ======>", facebookUser)
-
+  
+    // console.log("facebook user ======>", facebookUser)
+  
     if (!facebookUser) {
-        console.log("User does not exist")
-        const account = new db.Teacher();
-        account.status = "active";
-        account.provider_id = params.id;
-        account.firstName = params._json.first_name;
-        account.lastName = params._json.last_name;
-        account.social_provider = params.provider
-        await account.save();
-        // console.log("==========> ", account)
-        return account;
+      console.log("User does not exist");
+      const account = new db.Teacher();
+      account.provider_id = params.userID;
+      account.firstName = params.name;
+      account.social_provider = params.providerName;
+      account.image = params.imageUrl;
+      // console.log("account dekho", account);
+      await account.save();
+      const jwtToken = generateJwtToken(account);
+      return {
+        account: account,
+        jwtToken: jwtToken,
+      };
     } else if (facebookUser) {
-        // console.log("==========> found")
-        // console.log(googleUser)
-        // console.log("already saved....")
-
-        return facebookUser;
+      const jwtToken = generateJwtToken(facebookUser);
+      return {
+        account: facebookUser,
+        jwtToken: jwtToken,
+      };
     } else {
-        throw "some error"
+      throw "some error";
     }
-
-}
+  }
