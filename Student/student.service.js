@@ -640,7 +640,7 @@ async function studentAttendaceAll(id, user) {
     TotalAttendance[i].splice(i,(TotalAttendance[i].length));
     TotalAttendance[i].push({
       "Total Present": counterPr,
-      "Total Absent": counterAb,
+      "Total Absent": counterAb
     });
 
     counterPr = 0;
