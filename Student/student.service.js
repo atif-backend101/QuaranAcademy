@@ -631,7 +631,7 @@ async function studentAttendaceAll(id, user) {
       delete TotalAttendance[i][j].class_id;
       delete TotalAttendance[i][j].time;
       delete TotalAttendance[i][j].student;
-      if (TotalAttendance[i][j].status == "present") {
+      if (TotalAttendance[i][j].status == "Present") {
         counterPr++;
       } else if (TotalAttendance[i][j].status == "Absent") {
         counterAb++;
