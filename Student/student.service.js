@@ -643,7 +643,7 @@ async function studentAttendaceAll(id, user) {
       "Total Present": counterPr,
       "Total Absent": counterAb
     });
-    //counter Present Absent Students 
+    //counter Present Absent Student
     counterPr = 0;
     counterAb = 0;
     
